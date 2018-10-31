@@ -1,11 +1,11 @@
 """
-Depth First Search
-- exhaustively search a given branch before going onto
-a neighbour
-- Must check that a given node has been visited, or we get
-could get stuck in an inf. loop
+- Main tripping point is assumption that BFS uses recursion
+- Actually implemented using a Queue, using an iterative approach
+
 """
+
 from collections import defaultdict
+from queue import Queue
 
 class Graph:
 	"""Represent graph using adjacency list"""
@@ -26,27 +26,38 @@ class Graph:
 		return str(self._graph)
 
 
-class DFS:
+class BFS:
 	"""Operates on Graph objects"""
 
 	def __init__(self, graph):
 		self._graph = graph
 		self._visited = {k: False for k, v in graph}
+		self._queue = Queue()
+
 
 	def visit(self, v):
 		"""Mark visited Nodes"""
 		self._visited[v] = True
 
+
 	def search(self, root):
 
-		# mark root node as visited
 		self.visit(root)
+		self._queue.put(root)
 		print(root)
 
-		for node in self._graph[root]:
-			if not self._visited[node]:
-				self.search(node)
+		while self._queue:
+			
+			node_to_examine = self._queue.get()
 
+			for node in self._graph[node_to_examine]:
+				if not self._visited[node]:
+					print(node)
+
+					self.visit(node)
+					self._queue.put(node)
+
+		print("here", self._queue.qsize())
 
 def main():
 	"""
@@ -67,7 +78,8 @@ def main():
 
 	print(g) 
 
-	DFS(g).search(0)
+	BFS(g).search(0)
 
 if __name__ == "__main__":
-	main()
+	main()	
+
