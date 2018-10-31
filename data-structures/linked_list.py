@@ -32,7 +32,6 @@ class LinkedList:
         beginning with a pointer to the first node"""
     def __init__(self):
         self.head = None
-
     
     def printList(self):
         """Print representation of a linked list"""
