@@ -41,7 +41,7 @@ def fib_memoized(n):
 	return fib_memoized(n-1) + fib_memoized(n-2)
 
 
-def bottom_up_fib(n):
+def iterative_fib(n):
 	"""
 	Instead of recursion, can solve the problem iteratively
 		Using the bottom-up way of thinking
@@ -72,10 +72,10 @@ if __name__ == "__main__":
 	recursive_time = d-c
 
 	e = time()
-	bottom_up_fib(n)
+	iterative_fib(n)
 	f = time()
 
-	bottom_up_time = d-c
+	iterative_time = d-c
 
 	print("The memoized method is {} times faster than the recursive method".format(recursive_time/memoized_time))
-	print("The bottom-up method is {} times faster than the recursive method".format(recursive_time/bottom_up_time))
+	print("The iterative method is {} times faster than the recursive method".format(recursive_time/iterative_time))
