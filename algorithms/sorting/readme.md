@@ -25,6 +25,7 @@ Of those asked in interviews, merge sort, quick sort, and bucket sort are the mo
 - Conquer: Recursively sort two subsequences using Merge-Sort
 - Combine: Merge to subsequences to produce final solution
 
+
 ## Quick Sort
 
 
