@@ -37,8 +37,9 @@ class StackArray:
     def number_of_spaces(stack):
         c = 0
         for i in stack:
-            if i is not None:
+            if i is None:
                 c += 1
+        return c
 
     @staticmethod
     def next_free_index(stack):
@@ -99,7 +100,9 @@ class StackArray:
 
 
 if __name__ == "__main__":
-    s = StackArray(15)
+    s = StackArray(3)
     print(s)
     s.push('a', 0)
+    s.push('a', 0)
+    # should raise ValueError for stack being full
     print(s)
