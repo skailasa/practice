@@ -2,8 +2,6 @@
 Implementation of a hash table using linked lists
 """
 
-from hashlib import sha1, sha256
-
 
 class Node:
     """
@@ -66,16 +64,8 @@ class LinkedList:
         self._head = temp
 
 
-def hash(value):
-    """
-    Apply SHA1 hash to a given value
-    """
-    if isinstance(value, str):
-        value = str(value).encode('utf-8')
-
-    hash = int(sha256(value).hexdigest(), 16) % (10*20)
-
-    return hash
+def small_hash(value):
+    return hash(value) % 10
 
 
 class HashTable:
@@ -89,12 +79,12 @@ class HashTable:
     def __repr__(self):
         items = []
         for v in self._values:
-            items.append((v, self._table[hash(v)]))
+            items.append((v, self._table[small_hash(v)]))
 
         return str(items)
 
     def __setitem__(self, value, item):
-        key = hash(value)
+        key = small_hash(value)
         ll = LinkedList()
         ll.add(item)
 
@@ -104,7 +94,7 @@ class HashTable:
         self._table[key] = ll
 
     def __getitem__(self, value):
-        key = hash(value)
+        key = small_hash(value)
         return self._table[key]
 
 
