@@ -69,40 +69,60 @@ def small_hash(value):
 
 
 class HashTable:
-    """Simple Hashtable implementaiton using linked lists"""
+    """Simple Hashtable implementation using linked lists"""
 
     def __init__(self):
         # buffer space
-        self._table = [None]*int(1e6)
+        self._table = [LinkedList() for i in range(100)]
         self._values = []
 
     def __repr__(self):
-        items = []
-        for v in self._values:
-            items.append((v, self._table[small_hash(v)]))
 
-        return str(items)
+        l = []
+        for v in self._values:
+            l.append((v, self._table[small_hash(v)]))
+
+        return str(l)
 
     def __setitem__(self, value, item):
+
         key = small_hash(value)
-        ll = LinkedList()
-        ll.add(item)
 
         if value not in self._values:
             self._values.append(value)
 
-        self._table[key] = ll
+        self._table[key].add(item)
 
     def __getitem__(self, value):
         key = small_hash(value)
+
         return self._table[key]
+
+
+class Set(HashTable):
+    """HashTable where the key and value are the same"""
+    def __init__(self, iterable):
+        super().__init__()
+        self._set = HashTable()
+        for item in iterable:
+            self._set[item] = item
+
+    def __repr__(self):
+        return str(self._set)
+
+
+class Dict(HashTable):
+    """HashTable where a key maps to a value"""
+    def __init__(self):
+        super().__init__()
 
 
 if __name__ == "__main__":
 
     h = HashTable()
     h['a'] = 'b'
-    h['b'] = 'c'
-    print(h['a'])  # 'b'
-    print(h['b'])  # 'c'
+    h['a'] = 'c'
+    h['b'] = 'd'
+
+
 
