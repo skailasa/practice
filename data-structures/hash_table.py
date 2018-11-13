@@ -65,7 +65,7 @@ class LinkedList:
 
 
 def small_hash(value):
-    return hash(value) % 10
+    return hash(value) % 100
 
 
 class HashTable:
@@ -73,7 +73,7 @@ class HashTable:
 
     def __init__(self):
         # buffer space
-        self._table = [None for i in range(100)]
+        self._table = [None for i in range(int(10e5))]
         self._values = []
 
     def __repr__(self):
@@ -124,8 +124,9 @@ if __name__ == "__main__":
 
     h = HashTable()
     h['a'] = 'b'
-    h['a'] = 'c'
     h['b'] = 'd'
+    h['c'] = 'f'
+
+    # expected: [('a', ['b']), ('b', ['d']), ('c', ['f'])]
 
     print(h)
-
