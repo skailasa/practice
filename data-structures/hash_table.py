@@ -73,7 +73,7 @@ class HashTable:
 
     def __init__(self):
         # buffer space
-        self._table = [LinkedList() for i in range(100)]
+        self._table = [None for i in range(100)]
         self._values = []
 
     def __repr__(self):
@@ -90,6 +90,9 @@ class HashTable:
 
         if value not in self._values:
             self._values.append(value)
+
+        if not self._table[key]:
+            self._table[key] = LinkedList()
 
         self._table[key].add(item)
 
@@ -124,5 +127,5 @@ if __name__ == "__main__":
     h['a'] = 'c'
     h['b'] = 'd'
 
-
+    print(h)
 
