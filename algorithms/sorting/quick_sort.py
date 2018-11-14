@@ -14,28 +14,29 @@ Partition is key to procedure: see diagram on p 172 of CLRS for details
 
 """
 
+
 class Quick:
 
-	def partition(self, A, low, high):
-		pivot = A[high]
-		i = low -1
-		for j in range(low, high):
-			if A[j] <= pivot:
-				i+=1
-				A[i], A[j] = A[j], A[i]
+    def partition(self, A, low, high):
+        pivot = A[high]
+        i = low - 1
+        for j in range(low, high):
+            if A[j] <= pivot:
+                i += 1
+                A[i], A[j] = A[j], A[i]
 
-		A[i+1], A[high] = A[high], A[i+1]
-		
-		return i+1	
+        A[i + 1], A[high] = A[high], A[i + 1]
 
-	def sort(self, A, low, high):
-		if low < high:
-			p = self.partition(A, low, high)
-			self.sort(A, low, p-1)
-			self.sort(A, p+1, high)
+        return i + 1
+
+    def sort(self, A, low, high):
+        if low < high:
+            p = self.partition(A, low, high)
+            self.sort(A, low, p - 1)
+            self.sort(A, p + 1, high)
 
 
 if __name__ == "__main__":
-	A = [5,4,3,2,1]
-	Quick().sort(A,0,4)
-	print(A)
+    A = [5, 4, 3, 2, 1]
+    Quick().sort(A, 0, 4)
+    print(A)
