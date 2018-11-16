@@ -30,7 +30,7 @@ def binary_search(x, A):
 
 
 def find_element(x, A_rotated):
-
+    """Of complexity O(log(n) + n) = O(log(n))"""
     pivot = 0
 
     for i in range(len(A_rotated)-1):
