@@ -10,7 +10,12 @@ Conquer: Sort two subarrays above and below pivot by recursive
 calls to quicksort.
 
 Partition is key to procedure: see diagram on p 172 of CLRS for details
-- 
+
+Performance depends on whether the partitioning is unbalanced or balanced.
+
+Worst case:
+- when partitioning produces one problem with n-1 elements and another with
+0 elements.
 
 """
 
@@ -38,5 +43,9 @@ class Quick:
 
 if __name__ == "__main__":
     A = [5, 4, 3, 2, 1]
-    Quick().sort(A, 0, 4)
+    #Quick().sort(A, 0, 4)
+    #print(A)
+    print(Quick().partition(A, 0, 4))
+    print(Quick().partition(A, 0, 4))
+    #print(Quick().partition(A, 0, 3))
     print(A)
