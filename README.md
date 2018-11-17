@@ -1,4 +1,6 @@
-# practice
+<h1 align="center">
+    Practice
+</h1>
 
 There's a great, potentially apocryphal story of Richard Feynman learning
 to draw at the age of 44. He met an artist at a party, and got into a debate
@@ -15,4 +17,4 @@ lovely pieces.
 The point isn't so much that practice made him perfect, but it certainly made
 him better.
 
-![Some of Feynman's later sketches](practice/_static/feynmanart3.jpg)
+![Some of Feynman's later sketches](_static/feynmanart3.jpg)
