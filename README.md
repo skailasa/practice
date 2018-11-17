@@ -17,4 +17,6 @@ lovely pieces.
 The point isn't so much that practice made him perfect, but it certainly made
 him better.
 
-![Some of Feynman's later sketches](_static/feynmanart3.jpg)
+<p align="center">
+    <img src="_static/feynmanart3.jpg" alt="Some of Feynman's later sketches">
+</p>
