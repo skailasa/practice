@@ -1,22 +1,6 @@
 """
-Write an iterator in Python.
-- reads in all data, pre-processing so that it's suitable for
-    machine learning models.
-Task:
-- Consider image datasets with images of resolution 1920x1080, passed to
-    the generator as a list of paths pointing to the location on disk.
-- The iterator should read in the original images from disk and randomly
-    select one 512x512 patch in the image.
-- Once 32 images have been processed, it should yield a batch of 32
-    patches.
-- i.e. The iterator serves numpy arrays of dimension 32x3x512x512.
-- An input image is only used once for selecting a patch, until all
-    input images are processed.
-- Should also have the option of running forever, in which case after
-    each input images are used it starts again.
-- The generator should also have the option to to process input images
-    in a random order. In the instance of it running forever, the order
-    should be different for each pass through the dataset.
+Author: Srinath Kailasa
+Date: 22 November 2018
 """
 import itertools
 
@@ -87,6 +71,7 @@ def find_random_patch(array, xdim=1920, ydim=1080, patch_size=512):
 class ImageProcessor:
     """
     Use class to abstract processing function from desired generator
+        containing processed images.
     """
 
     def __init__(self, processing_func):
@@ -99,15 +84,17 @@ class ImageProcessor:
     def process(self, filepaths, run_forever=False, random_order=False):
         """
         Generator, processing the images. Takes list of input filepaths,
-            yields random patches.
+            yields random patches. Processing is done in batches to
+            conserve memory with large image datasets.
         :param list[str] filepaths: List of filepaths of images being
             processed.
-        :param bool run_forever: If True will run for ever, and vice
-            versa. If random_order also set to true, will pick run
-            batches in a different order each time.
+        :param bool run_forever: If True will run for ever, otherwise
+            runs once. When running forever, the process order will be
+            the same each time, unless random_order is also set to True
         :param bool random_order: If True will process batch in random
             order.
-        :return: Yield processed batches of dimension (batchsize, 512, 512, 3)
+        :return: Yield processed batches, using the instantiated
+            processing function.
         """
         batch_size = 32
 
