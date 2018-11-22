@@ -83,9 +83,8 @@ class ImageProcessor:
 
     def process(self, filepaths, run_forever=False, random_order=False):
         """
-        Generator, processing the images. Takes list of input filepaths,
-            yields random patches. Processing is done in batches to
-            conserve memory with large image datasets.
+        Generator, processing the images. Processing is done in batches
+            to conserve memory with large image datasets.
         :param list[str] filepaths: List of filepaths of images being
             processed.
         :param bool run_forever: If True will run for ever, otherwise
