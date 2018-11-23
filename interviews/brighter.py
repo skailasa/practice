@@ -1,6 +1,22 @@
 """
 Author: Srinath Kailasa
 Date: 22 November 2018
+
+Example Usage:
+>>> import glob
+>>>
+>>> # directory where images are stored
+>>> filepaths = glob.glob('/image_dir/*.jpg')
+>>>
+>>> # instantiate processor object with desired functionality
+>>> processer = ImageProcessor(find_random_patch)
+>>>
+>>> # call process method to return generator, declare optional args
+>>> processsed_images = processer.process(filepaths, run_forever=True, random_order=True)
+>>>
+>>> # generator returns batches of processed images
+>>> for batch in processed_images:
+>>> ...    print(batch)
 """
 import itertools
 
@@ -20,7 +36,8 @@ def shuffle_generator(_list):
 
 def batch(iterable, batch_size):
     """
-    Generator returning batches of an input iterable, of size batch_size.
+    Generator returning batches of an input iterable, of size
+        batch_size.
     :param iter iterable: The iterable being batched.
     :param int batch_size: The batch size.
     :return: Yields batches of input iterable.
@@ -103,7 +120,9 @@ class ImageProcessor:
             if not random_order:
                 batched_filepaths = batch(filepaths, batch_size)
             else:
-                batched_filepaths = batch(shuffle_generator(filepaths), batch_size)
+                batched_filepaths = batch(
+                    shuffle_generator(filepaths), batch_size
+                )
 
             for batch_of_filepaths in batched_filepaths:
                 yield np.array([
@@ -113,13 +132,3 @@ class ImageProcessor:
 
             if not run_forever:
                 end = True
-
-
-if __name__ == "__main__":
-
-    filepaths = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
-
-    processer = ImageProcessor(find_random_patch).process(filepaths)
-
-    for i in processer:
-        print(i.shape)
