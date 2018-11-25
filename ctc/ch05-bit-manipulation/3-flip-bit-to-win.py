@@ -47,9 +47,6 @@ def longest_sequence(num):
     return max(current_longest, previous_longest)
 
 
-
-
-
 if __name__ == "__main__":
 
     num = 567
