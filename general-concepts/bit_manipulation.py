@@ -36,9 +36,7 @@ def clear_bit(num, i):
 
 def all_ones(num):
     """
-    Check if a number in binary contains all 1s
-    :param num:
-    :return:
+    Check if a number in binary contains all ones
     """
     return ((num + 1) & num == 0) and (num != 0)
 
