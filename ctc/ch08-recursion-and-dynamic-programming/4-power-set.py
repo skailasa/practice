@@ -9,9 +9,6 @@ Strategy:
 """
 
 
-ALL_SUBSETS = []
-
-
 def subsets(s):
     if not s:
         # empty set
