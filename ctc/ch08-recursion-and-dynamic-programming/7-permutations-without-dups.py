@@ -1,6 +1,8 @@
 """
 Write a method to compute all permutations of a string of unique
     characters.
+
+My implementation will also work for non-unique characters.
 """
 
 
@@ -25,10 +27,10 @@ def permute(s, length):
 
 
 if __name__ == "__main__":
-    s = 'abc'
+    s = 'srr'
 
     length = len(s)
 
     permute(s, length)
 
-    print(PERMUTATIONS)
+    print(set(PERMUTATIONS))
