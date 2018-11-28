@@ -8,6 +8,17 @@ DENOMINATIONS = [
 ]
 
 
+def memoize(f):
+    memo = {}
+
+    def helper(x):
+        if x not in memo:
+            memo[x] = f(x)
+        return memo[x]
+
+    return helper
+
+
 def make_change(n, denominations, index):
 
     if index >= len(denominations)-1:
@@ -28,6 +39,11 @@ def make_change(n, denominations, index):
     return ways
 
 
-if __name__ == "__main__":
-    print(make_change(10, DENOMINATIONS, 0))
+@memoize
+def algorithm(n):
+    denominations = [25, 10, 5, 1]
+    return make_change(n, denominations, 0)
 
+
+if __name__ == "__main__":
+    print(algorithm(100))
