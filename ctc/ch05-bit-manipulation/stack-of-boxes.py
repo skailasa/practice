@@ -15,7 +15,10 @@ Strategy:
 
 
 class Box:
-
+    """
+    Simple data structure representing a Box of width w, height h and
+        depth d.
+    """
     def __init__(self, w, h, d):
         self.w = w
         self.h = h
@@ -34,16 +37,15 @@ class Box:
         return self.__dict__[item]
 
 
-BOXES = [Box(i, i, i) for i in range(1, 10)]
-
-
 def can_stack(box_a, box_b):
+    """Check if box_b can be stacked on box_a"""
     if box_a.w > box_b.w and box_a.h > box_b.h and box_a.d > box_b.d:
         return True
     return False
 
 
 def can_place_below(box_a, box_b):
+    """Check if box_a can be placed below box_b"""
     if box_a.w < box_b.w and box_a.h < box_b.h and box_a.d < box_b.d:
         return True
     return False
