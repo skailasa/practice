@@ -1,0 +1,6 @@
+FROM dockerinaction/mailer-base:0.6
+COPY ["./log-impl", "$APPROOT"]
+RUN chmod a+x ${APPROOT}/${APP} && chown example:example /var/log
+USER example:example
+VOLUME ["/var/log"]
+CMD ["/var/log/mailer.log"]
