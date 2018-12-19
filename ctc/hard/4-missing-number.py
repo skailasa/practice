@@ -42,11 +42,10 @@ def count(l, shift=0):
 
 def missing_integer(l, shift):
 
-    c = count(l[0], shift)
+    c = count(l, shift)
     missing_int = ''
     even = False
-    print(c)
-    if l[1] % 2 == 0:
+    if (len(l)+1) % 2 == 0:
         even = True
 
     if even:
@@ -88,15 +87,27 @@ def filter_odds(l, shift):
     return res
 
 
+def find_missing_integer(l, shift=0, res=''):
+    if len(l) == 1:
+        res += missing_integer(l, shift)
+        print(res[::-1])
+
+    elif missing_integer(l, shift) == '0':
+        res += '0'
+        # even, filter out odds
+        l = filter_evens(l, shift)
+        find_missing_integer(l, shift+1, res)
+
+    elif missing_integer(l, shift) == '1':
+        res += '1'
+        # odd, filter out evens
+        l = filter_odds(l, shift)
+        find_missing_integer(l, shift+1, res)
+
+
 if __name__ == "__main__":
 
     # a six is missing, 110 in binary
-    l = ([0, 1, 2, 3, 4, 5], 7)
-    print(missing_integer(l, 0))
-    # should output 0, therefore filter out odds
-    print(filter_evens(l[0], 0))
-    # results in [0, 2], put this back into algorithm
-    print(missing_integer(([0, 4, 2], 4), 1))
-    # results in 1, filter out evens [2]
-    print(filter_odds([0, 4, 2], 1))
-    print(missing_integer(([2], 2), 2))
+    l = [0, 1, 2, 3, 4, 5]
+
+    find_missing_integer(l)
