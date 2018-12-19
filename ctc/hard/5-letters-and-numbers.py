@@ -21,6 +21,7 @@ def max_subarray(l):
     difference = [0]
     idxs = defaultdict(list)
     max_diff = 0
+    res = ''
 
     for ch in l:
         if isinstance(ch, int):
