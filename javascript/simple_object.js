@@ -17,6 +17,27 @@ function Person(first, last) {
     };
   }
 
-var me = Person('Srinath', 'Kailasa')
+function personFullName() {
+  return this.first + ' ' + this.last
+}
 
+function personFullNameReversed() {
+  return this.last + ' ' + this.first
+}
+
+function BetterPerson(first, last) {
+  // better implementation using `this` keyword
+  this.first = first;
+  this.last = last;
+  this.fullName = personFullName;
+  this.fullNameReversed = personFullNameReversed;
+}
+
+var oldme = Person('Srinath', 'Kailasa')
+
+
+// new creates a new object, strongly related to this
+// Functions designed to be called by new are called
+// constructor functions.
+var me = new BetterPerson('Srinath', 'Kailasa')
 console.log(me.fullName())
