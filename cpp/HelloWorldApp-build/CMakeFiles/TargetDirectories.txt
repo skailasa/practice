@@ -1,0 +1,3 @@
+/Users/Sri/practice/cpp/HelloWorldApp-build/CMakeFiles/rebuild_cache.dir
+/Users/Sri/practice/cpp/HelloWorldApp-build/CMakeFiles/edit_cache.dir
+/Users/Sri/practice/cpp/HelloWorldApp-build/CMakeFiles/binary.dir
