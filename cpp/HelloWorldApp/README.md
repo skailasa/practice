@@ -43,7 +43,7 @@ in here with the same name as your project forces a user to write:
 instead of:
 
 ```c++
-# include <public_header.sh>
+#include <public_header.sh>
 ```
 
 which makes it a lot more obvious where they are calling in code from. 
