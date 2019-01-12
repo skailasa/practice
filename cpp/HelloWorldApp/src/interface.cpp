@@ -1,12 +1,15 @@
 #include <driver.h>
 #include <HelloWorldApp/interface.h>
 
-void RandomNumberGeneratorInterface::start(int num)
+RandomNumberGeneratorInterface::RandomNumberGeneratorInterface(int length): _length(length)
 {
-    this->attempt->generate(num);
+    // new returns a pointer to a random number generator object
+    attempt = new RandomNumberGenerator(_length);
 }
 
-RandomNumberGeneratorInterface::RandomNumberGeneratorInterface(int length)
-{
-    this->attempt = new RandomNumberGenerator(length);
+void RandomNumberGeneratorInterface::start(int num)
+{   
+    // arrow operator allows you to access members of a struct/class
+    // through a pointer
+    attempt -> generate(num);
 }

@@ -6,8 +6,9 @@ class RandomNumberGeneratorInterface
 {
     private:
         RandomNumberGenerator *attempt;
+        int _length;       
 
     public:
-        RandomNumberGeneratorInterface(int length);
+        RandomNumberGeneratorInterface(int length); 
         void start(int num);
 };
