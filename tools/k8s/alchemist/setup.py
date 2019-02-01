@@ -21,7 +21,7 @@ setup(
         'console_scripts': ['abracadabra=alchemist.app:run']
     },
     install_requires=[
-        'PyYaml==3.13',
+        'PyYaml==4.2b1',
         'flask==1.0.2',
     ],
     extras_require={
