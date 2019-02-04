@@ -27,7 +27,6 @@ class Cell:
     def max_size(self):
         if not self._max_size:
             return len(self._val)
-
         else:
             return self._max_size
 
@@ -35,7 +34,6 @@ class Cell:
     def padded_value(self):
         if not self._max_size:
             return self._val
-
         else:
             return " "*(self.max_size-len(self._val))+self._val
 
