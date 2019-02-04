@@ -20,14 +20,24 @@ Example Usage:
 class Cell:
     """Encapsulate the properties of each cell"""
     def __init__(self, val, max_size=None):
-        self.val = str(val)
-        if not max_size:
-            self.max_size = len(str(val))
-            self.padded_value= str(val)
+        self._val = str(val)
+        self._max_size = max_size
+
+    @property
+    def max_size(self):
+        if not self._max_size:
+            return len(self._val)
 
         else:
-            self.max_size = max_size
-            self.padded_value = " "*(max_size-len(self.val))+self.val
+            return self._max_size
+
+    @property
+    def padded_value(self):
+        if not self._max_size:
+            return self._val
+
+        else:
+            return " "*(self.max_size-len(self._val))+self._val
 
     @property
     def value(self):
@@ -68,5 +78,5 @@ class Table:
 
 
 if __name__ == "__main__":
-    t = Table(A=[1, 2, 3, 400], K=2)
+    t = Table(A=[1, 2, 3, 400, 2], K=4)
     t.draw_table()
