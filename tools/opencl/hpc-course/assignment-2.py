@@ -1,7 +1,18 @@
+"""
+(i) Implement a Grid class to read in triangular data
+(ii) Solve the Wave Equation in 2D, and accellerate using OpenCL
+"""
+
 import os
 
 import numpy as np
+import pyopencl as cl
 import vtk
+
+
+"""
+Part (i) Implement Grid Class
+"""
 
 
 class Grid:
@@ -78,7 +89,7 @@ class Grid:
         return self._elements
 
     def get_corners(self, element_id):
-        """Return the 2x3 matrix of corners associated with an element."""
+        """Return the 3x2 matrix of corners associated with an element."""
         return self._vertices[self._elements[element_id, :], :]
 
     def get_jacobian(self, element_id):
@@ -132,13 +143,94 @@ class Grid:
         return grid
 
 
+"""
+Part (ii) Implement Solution to the Wave Equation
+"""
+
+# OpenCL parameters
+cl_ctx = cl.create_some_context()
+cl_queue = cl.CommandQueue(cl_ctx)
+mf = cl.mem_flags
+kernel_src = open('kernels/wave_equation.cl', 'r').read()
+kernel_src_bc = open('kernels/wave_equation_bc.cl', 'r').read()
+
+# Set number of timesteps
+T = 2
+nt = 500
+# Set number of cells
+X = 1
+nx = 200
+# Set wave speed
+c = 1
+
+# Calculate step size
+dx = X/(nx-1)
+dt = T/nt
+
+# Calculate Courant number
+C = c * (dt / dx)
+
+# CPU data
+xx = np.linspace(0, 1, nx, dtype=np.float32)
+u0 = np.exp(-5*(xx - 0.5) ** 2)
+
+# Calculate first step
+u1 = np.zeros_like(u0, dtype=np.float32)
+for i in range(0, nx):
+    il = 1 if i == 0 else i - 1
+    ir = nx - 2 if i == nx - 1 else i + 1
+    u1[i] = u0[i] - 0.5 * C**2 + (u0[ir] - 2*u0[i] + u0[il])
+
+
+# Upload data to the device
+U0_g = cl.Buffer(cl_ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf=u0)
+U1_g = cl.Buffer(cl_ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf=u1)
+
+# Allocate output buffer
+U2_g = cl.Buffer(cl_ctx, mf.READ_WRITE, u1.nbytes)
+
+# Build Kernels
+prg1 = cl.Program(cl_ctx, kernel_src).build()
+wave_equation_1d = prg1.wave_eq_1D
+prg2 = cl.Program(cl_ctx, kernel_src_bc).build()
+wave_equation_1d_bc = prg2.wave_eq_2D_bc
+
+
+RES = []
+
+# Loop through all the timesteps
+
+for i in range(nt):
+    kernel_args = (U2_g, U1_g, U0_g, np.float32(c), np.float32(dt), np.float32(dx))
+
+    # Execute kernel on device with nx threads
+    wave_equation_1d(cl_queue, (nx, 1), None, *kernel_args)
+    # Impose boundary conditions
+    wave_equation_1d_bc(cl_queue, (nx, 1), None, U2_g)
+
+    u0 = np.empty(nx, dtype=np.float32)
+
+    cl.enqueue_copy(cl_queue, u0, U0_g)
+    RES.append(u0)
+
+    # Swap variables
+    U0_g, U1_g, U2_g = U1_g, U2_g, U0_g
+
+
+RES = np.array(RES)
+
+print(RES)
+
 if __name__ == "__main__":
 
+    """
     g = Grid.from_vtk_file('data/lshape.vtk')
 
     print(g.vertices.shape)
     print(g.elements.shape)
     element_id = 1124
+    print(g.get_corners(element_id).shape)
     print("Corners\n", g.get_corners(element_id))
     print("Jacobian \n", g.get_jacobian(element_id))
     #print(g.number_of_vertices)
+    """
