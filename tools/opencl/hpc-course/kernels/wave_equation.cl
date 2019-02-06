@@ -11,23 +11,27 @@ __kernel void wave_eq_1D(__global float *u2,
 {
 	//Get total number of cells
 	int nx = get_global_size(0);
-	int index = get_global_id(0);
+	int idx = get_global_id(0);
 
 	//Calculate the indices of our neighbouring cells
 	int left;
 	int right;
 
-	if (index == 0) {
+	if (idx == 0) {
 	    left = 1;
 	}
 	else {
-	    left = index - 1;
+	    left = idx - 1;
 	}
-	if (index == nx - 1) {
+	if (idx == nx - 1) {
         right = nx - 1;
 	}
 	else {
-	    right = index + 1;
+	    right = idx + 1;
 	}
-    u2[index] = 2 * u1[index] - u0[index] + (c*c) * (dt * dt) / (dx * dx) * (u1[right] - 2 * u1[index] + u1[left]);
+    u2[idx] = 2 * u1[idx] \
+                 - u0[idx] \
+                 + (c*c) \
+                    * (dt * dt) / (dx * dx) \
+                    * (u1[right] - 2 * u1[idx] + u1[left]);
 }
