@@ -2,9 +2,7 @@
 (i) Implement a Grid class to read in triangular data
 (ii) Solve the Wave Equation in 2D, and accellerate using OpenCL
 """
-
-import os
-
+import matplotlib.pyplot as plt
 import numpy as np
 import pyopencl as cl
 import vtk
@@ -147,96 +145,94 @@ class Grid:
 Part (ii) Implement Solution to the Wave Equation
 """
 
-# OpenCL parameters
-cl_ctx = cl.create_some_context()
-cl_queue = cl.CommandQueue(cl_ctx)
-mf = cl.mem_flags
-kernel_src = open('kernels/wave_equation.cl', 'r').read()
-kernel_src_bc = open('kernels/wave_equation_bc.cl', 'r').read()
 
-# Set number of timesteps
-T = 2
-nt = 500
-# Set number of cells
-X = 1
-nx = 200
-# Set wave speed
-c = 1
+def open_cl_setup():
+    """
+    Return objects required for interacting with OpenCL devices
+    """
+    cl_ctx = cl.create_some_context()
+    cl_queue = cl.CommandQueue(cl_ctx)
+    mf = cl.mem_flags
 
-# Calculate step size
-dx = X/(nx-1)
-dt = T/nt
-
-# Calculate Courant number
-C = c * (dt / dx)
-
-# CPU data
-xx = np.linspace(0, X, nx, dtype=np.float32)
-u0 = np.exp(-5*(xx-.5) ** 2)
-
-# Calculate first step
-u1 = np.zeros_like(u0, dtype=np.float32)
-
-for i in range(0, nx):
-    il = 1 if i == 0 else i - 1
-    ir = nx - 2 if i == nx - 1 else i + 1
-    u1[i] = u0[i] - 0.5 * C**2 * (u0[ir] - 2*u0[i] + u0[il])
-
-# Upload data to the device
-U0_g = cl.Buffer(cl_ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf=u0)
-U1_g = cl.Buffer(cl_ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf=u1)
-
-# Allocate output buffer
-U2_g = cl.Buffer(cl_ctx, mf.READ_WRITE, u1.nbytes)
-
-# Build Kernels
-prg1 = cl.Program(cl_ctx, kernel_src).build()
-wave_equation_1d = prg1.wave_eq_1D
-prg2 = cl.Program(cl_ctx, kernel_src_bc).build()
-wave_equation_1d_bc = prg2.wave_eq_2D_bc
-
-RES = [u0, u1]
-
-# Loop through all the timesteps
-nt = 500
-for i in range(1, nt): # nt
-    kernel_args = (U2_g, U1_g, U0_g, np.float32(c), np.float32(dt), np.float32(dx))
-
-    # Execute kernel on device with nx threads
-    wave_equation_1d(cl_queue, (nx, 1), None, *kernel_args)
-
-    u2 = np.empty(nx, dtype=np.float32)
-    cl.enqueue_copy(cl_queue, u2, U2_g)
-    #print(u2)
-    RES.append(u2)
+    return cl_ctx, cl_queue, mf
 
 
-    # Swap variables
-    U0_g, U1_g, U2_g = U1_g, U2_g, U0_g
+def solve_wave_equation_cl(
+        kernel_fp = 'kernels/wave_equation.cl', nx=200, nt=500, c=1, T=2, X=1):
+    """
+    Solve the 1D wave equation using OpenCL
+    :param nx: The number of spatial steps
+    :param nt: The number of temporal steps
+    :param c: Wave speed
+    :param T: Simulation time
+    :param X: Spatial extent
+    :return None:
+    """
+
+    cl_ctx, cl_queue, mf = open_cl_setup()
+    kernel_src = open(kernel_fp, 'r').read()
+
+    # Calculate step size
+    dx = X/(nx-1)
+    dt = T/nt
+
+    # Calculate Courant number
+    C = c * (dt / dx)
+
+    # CPU data
+    xx = np.linspace(0, X, nx, dtype=np.float32)
+    u0 = np.exp(-5*(xx-.5) ** 2)
+
+    # Calculate first step
+    u1 = np.zeros_like(u0, dtype=np.float32)
+    for i in range(0, nx):
+        il = 1 if i == 0 else i - 1
+        ir = nx - 2 if i == nx - 1 else i + 1
+        u1[i] = u0[i] - 0.5 * C**2 * (u0[ir] - 2*u0[i] + u0[il])
+
+    # Upload data to the device
+    U0_g = cl.Buffer(cl_ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf=u0)
+    U1_g = cl.Buffer(cl_ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf=u1)
+
+    # Allocate output buffer
+    U2_g = cl.Buffer(cl_ctx, mf.READ_WRITE, u1.nbytes)
+
+    # Build Kernels
+    prg = cl.Program(cl_ctx, kernel_src).build()
+    wave_equation_1d = prg.wave_eq_1D
+
+    res = [u0, u1]
+
+    # Loop through all the timesteps
+    for i in range(1, nt): # nt
+        kernel_args = (U2_g, U1_g, U0_g, np.float32(c), np.float32(dt), np.float32(dx))
+
+        # Execute kernel on device with nx threads
+        wave_equation_1d(cl_queue, (nx, 1), None, *kernel_args)
+
+        u2 = np.empty(nx, dtype=np.float32)
+        cl.enqueue_copy(cl_queue, u2, U2_g)
+        res.append(u2)
+
+        # Swap variables
+        U0_g, U1_g, U2_g = U1_g, U2_g, U0_g
+
+    res = np.array(res).T
+
+    return res
 
 
-RES = np.array(RES).T
-print(RES.shape)
+def plot_simulation(**kwargs):
+    """Plot OpenCL simulation experiment results"""
+    res = solve_wave_equation_cl(**kwargs)
+
+    plt.imshow(res, extent=[0, kwargs.get('T', 2), 0, kwargs.get('X', 1)])
+    plt.colorbar()
+    plt.show()
 
 
-import matplotlib.pyplot as plt
-
-plt.imshow(RES, extent=[0, T, 0, 1])
-plt.colorbar()
-plt.show()
-
-"""
 if __name__ == "__main__":
+    kwargs = dict(kernel_fp='kernels/wave_equation.cl',
+                  nx=200, nt=500, c=1, T=2, X=1)
+    plot_simulation(**kwargs)
 
-
-    g = Grid.from_vtk_file('data/lshape.vtk')
-
-    print(g.vertices.shape)
-    print(g.elements.shape)
-    element_id = 50
-    print(g.get_corners(element_id).shape)
-    print("Elements\n", g.elements)
-    print("Corners\n", g.get_corners(element_id))
-    print("Jacobian \n", g.get_jacobian(element_id))
-    #print(g.number_of_vertices)
-"""
