@@ -3,7 +3,7 @@ Kernel for parallelising the spatial iteration in the 1D wave-equation
 solver
 */
 __kernel void wave_eq_1D(__global float *u2,
-                         __global float *u1,
+                         __global const float *u1,
                          __global const float* u0,
                          float c,
                          float dt,
