@@ -2,6 +2,8 @@
 (i) Implement a Grid class to read in triangular data
 (ii) Solve the Wave Equation in 2D, and accellerate using OpenCL
 """
+from time import time
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pyopencl as cl
@@ -223,9 +225,11 @@ def solve_wave_equation_cl(
 
 def plot_simulation(
         kernel_fp='kernels/wave_equation.cl', nx=200, nt=500, c=1, T=2, X=1):
-
     """Plot OpenCL simulation experiment results"""
+
+    start = time()
     res = solve_wave_equation_cl(kernel_fp, nx, nt, c, T, X)
+    print("Simulation time {:.2f} seconds".format(time()-start))
 
     plt.imshow(res, extent=[0, T, 0, X])
     plt.colorbar()
