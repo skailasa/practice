@@ -50,38 +50,28 @@ def min_distance(c1, c2, data):
         forward = dat
         backward = list(reversed(data[:idx-1]))
 
-        forward_dist = 0
-        for idx, c in enumerate(forward):
-            if idx == len(forward)-1:  # end of list without finding
-                forward_dist = 1000000  # some very large distance
-                distances.append(forward_dist)
-            else:
-                forward_dist += 1
-                if c == c2:
-                    if forward_dist == 1:  # dont loop any further if we found min distance
-                        return forward_dist
-                    distances.append(forward_dist)
-                    break
+        directions = [forward, backward]
 
-        backward_dist = 0
-        for c in backward:
-            if idx == len(backward)-1:
-                backward_dist = 1000000
-                distances.append(backward_dist)
-            else:
-                backward_dist += 1
-                if c == c2:
-                    if backward_dist == 1:
-                        return backward_dist
-                    distances.append(backward_dist)
-                    break
+        for direction in directions:
+            distance = 0
+            for idx, c in enumerate(direction):
+                if idx == len(direction) - 1:  # end of list without finding
+                    distance = 1000000  # some very large distance
+                    distances.append(distance)
+                else:
+                    distance += 1
+                    if c == c2:
+                        if distance == 1:  # dont loop any further if we found min distance
+                            return distance
+                        distances.append(distance)
+                        break
 
     return min(distances)
 
 
 if __name__ == "__main__":
     data = DATA_STREAM.split((' '))
-    c1 = 'a'
+    c1 = 'r'
     c2 = 'b'
     print("Input data \n", data)
     print("min distance between '{}' and '{}' is {}".format(c1, c2, min_distance(c1, c2, data)))
