@@ -222,11 +222,13 @@ def solve_wave_equation_cl(
     return res
 
 
-def plot_simulation(**kwargs):
-    """Plot OpenCL simulation experiment results"""
-    res = solve_wave_equation_cl(**kwargs)
+def plot_simulation(
+        kernel_fp='kernels/wave_equation.cl', nx=200, nt=500, c=1, T=2, X=1):
 
-    plt.imshow(res, extent=[0, kwargs.get('T', 2), 0, kwargs.get('X', 1)])
+    """Plot OpenCL simulation experiment results"""
+    res = solve_wave_equation_cl(kernel_fp, nx, nt, c, T, X)
+
+    plt.imshow(res, extent=[0, T, 0, X])
     plt.colorbar()
     plt.show()
 
