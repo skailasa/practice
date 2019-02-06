@@ -168,7 +168,6 @@ def solve_wave_equation_cl(
     :param X: Spatial extent
     :return None:
     """
-
     cl_ctx, cl_queue, mf = open_cl_setup()
     kernel_src = open(kernel_fp, 'r').read()
 
@@ -204,7 +203,7 @@ def solve_wave_equation_cl(
     res = [u0, u1]
 
     # Loop through all the timesteps
-    for i in range(1, nt): # nt
+    for i in range(1, nt):
         kernel_args = (U2_g, U1_g, U0_g, np.float32(c), np.float32(dt), np.float32(dx))
 
         # Execute kernel on device with nx threads
