@@ -171,16 +171,16 @@ dt = T/nt
 C = c * (dt / dx)
 
 # CPU data
-xx = np.linspace(0, 1, nx, dtype=np.float32)
-u0 = np.exp(-5*(xx - 0.5) ** 2)
+xx = np.linspace(0, X, nx, dtype=np.float32)
+u0 = np.exp(-5*(xx-.5) ** 2)
 
 # Calculate first step
 u1 = np.zeros_like(u0, dtype=np.float32)
+
 for i in range(0, nx):
     il = 1 if i == 0 else i - 1
     ir = nx - 2 if i == nx - 1 else i + 1
-    u1[i] = u0[i] - 0.5 * C**2 + (u0[ir] - 2*u0[i] + u0[il])
-
+    u1[i] = u0[i] - 0.5 * C**2 * (u0[ir] - 2*u0[i] + u0[il])
 
 # Upload data to the device
 U0_g = cl.Buffer(cl_ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf=u0)
@@ -195,42 +195,48 @@ wave_equation_1d = prg1.wave_eq_1D
 prg2 = cl.Program(cl_ctx, kernel_src_bc).build()
 wave_equation_1d_bc = prg2.wave_eq_2D_bc
 
-
-RES = []
+RES = [u0, u1]
 
 # Loop through all the timesteps
-
-for i in range(nt):
+nt = 500
+for i in range(1, nt): # nt
     kernel_args = (U2_g, U1_g, U0_g, np.float32(c), np.float32(dt), np.float32(dx))
 
     # Execute kernel on device with nx threads
     wave_equation_1d(cl_queue, (nx, 1), None, *kernel_args)
-    # Impose boundary conditions
-    wave_equation_1d_bc(cl_queue, (nx, 1), None, U2_g)
 
-    u0 = np.empty(nx, dtype=np.float32)
+    u2 = np.empty(nx, dtype=np.float32)
+    cl.enqueue_copy(cl_queue, u2, U2_g)
+    #print(u2)
+    RES.append(u2)
 
-    cl.enqueue_copy(cl_queue, u0, U0_g)
-    RES.append(u0)
 
     # Swap variables
     U0_g, U1_g, U2_g = U1_g, U2_g, U0_g
 
 
-RES = np.array(RES)
+RES = np.array(RES).T
+print(RES.shape)
 
-print(RES)
 
+import matplotlib.pyplot as plt
+
+plt.imshow(RES, extent=[0, T, 0, 1])
+plt.colorbar()
+plt.show()
+
+"""
 if __name__ == "__main__":
 
-    """
+
     g = Grid.from_vtk_file('data/lshape.vtk')
 
     print(g.vertices.shape)
     print(g.elements.shape)
-    element_id = 1124
+    element_id = 50
     print(g.get_corners(element_id).shape)
+    print("Elements\n", g.elements)
     print("Corners\n", g.get_corners(element_id))
     print("Jacobian \n", g.get_jacobian(element_id))
     #print(g.number_of_vertices)
-    """
+"""
