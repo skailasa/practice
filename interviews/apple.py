@@ -24,9 +24,13 @@ Input: yellow yellow blue yellow yellow red
 Params: red blue
 Output: 3
 
-Strategy:
-- Assume you know all possible colours a car can take in a given dataset,
+Assumptions:
+- Assume you know all possible colours a car can take in a given data set,
 and can't query or colours other than these
+- Assume that the end of the data set can be marked with a sentinel
+- Assume that there are no spelling errors in the data set, and a given
+string will be read without any special parsing, explicitly
+- Assume
 
 TODO:
 - Tests
@@ -89,14 +93,21 @@ def min_distance(colour_1, colour_2, colour_data):
                     distances.append(distance)
                     break
 
+    if not distances:
+        raise ValueError(
+            'Queried data set with unsupported colours',
+            colour_1,
+            colour_2
+        )
+
     return min(distances)
 
 
 if __name__ == "__main__":
-    data_stream = 'a o b a d b x r end'
+    data_stream = 'red orange blue green yellow blue green red end'
     data = data_stream.split((' '))
-    c1 = 'r'
-    c2 = 'x'
+    c1 = 'orange'
+    c2 = 'red'
 
     print("Input data \n", data)
     print(
