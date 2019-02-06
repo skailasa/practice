@@ -32,31 +32,29 @@ Strategy:
 
 POSSIBLE_COLOURS = {'r', 'b'}
 
-DATA_STREAM = 'b b b r r r'
+DATA_STREAM = 'b b r r r'
 
 
-def min_distance(c1, c2, data=None, examined_colours=None, distance=0):
-
-    if len(data) == 0 or examined_colours == POSSIBLE_COLOURS:
-        return distance
-
-    if not data:
+def min_distance(c1, c2, data=None, examined_colours=None, distance=None):
+    if data is None:
         data = DATA_STREAM.split(' ')
 
-    if not examined_colours:
+    if distance is None:
+        distance = 0
+
+    if examined_colours is None:
         examined_colours = set()
 
-    current_colour = data[0]
+    curr = data[0]
+    next = data[1]
 
-    if current_colour not in examined_colours:
-        examined_colours.add(current_colour)
+    if curr == next:
+        return min_distance(c1, c2, data[1:], examined_colours, distance)
 
-    for idx, c in enumerate(data[1:]):
-        if c not in examined_colours:
-            examined_colours.add(c)
-            distance += idx
+    else:
+        return distance
 
-    return min_distance(c1, c2, data[1:], examined_colours, distance)
+
 
 
 if __name__ == "__main__":
