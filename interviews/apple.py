@@ -25,13 +25,12 @@ Params: red blue
 Output: 3
 
 Strategy:
-- Assume you know all possible colours a car can take
+- Assume you know all possible colours a car can take in a given dataset,
+and can't query or colours other than these
 """
 
 
-DATA_STREAM = 'a o b c d b x a end'
-
-DATA_STREAM = 'y y b y y r end'
+DATA_STREAM = 'a o b a d b x r end'
 
 
 def start_point(c, data):
@@ -59,6 +58,8 @@ def min_distance(c1, c2, data):
             else:
                 forward_dist += 1
                 if c == c2:
+                    if forward_dist == 1:  # dont loop any further if we found min distance
+                        return forward_dist
                     distances.append(forward_dist)
                     break
 
@@ -70,6 +71,8 @@ def min_distance(c1, c2, data):
             else:
                 backward_dist += 1
                 if c == c2:
+                    if backward_dist == 1:
+                        return backward_dist
                     distances.append(backward_dist)
                     break
 
@@ -78,7 +81,7 @@ def min_distance(c1, c2, data):
 
 if __name__ == "__main__":
     data = DATA_STREAM.split((' '))
-    c1 = 'r'
+    c1 = 'a'
     c2 = 'b'
     print("Input data \n", data)
     print("min distance between '{}' and '{}' is {}".format(c1, c2, min_distance(c1, c2, data)))
