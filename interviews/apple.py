@@ -26,36 +26,60 @@ Output: 3
 
 Strategy:
 - Assume you know all possible colours a car can take
-- Examine first colour, check if you've examined it before,
-    - if not, then c
 """
 
-POSSIBLE_COLOURS = {'r', 'b'}
 
-DATA_STREAM = 'b b r r r'
+DATA_STREAM = 'a o b c d b x a end'
 
-
-def min_distance(c1, c2, data=None, examined_colours=None, distance=None):
-    if data is None:
-        data = DATA_STREAM.split(' ')
-
-    if distance is None:
-        distance = 0
-
-    if examined_colours is None:
-        examined_colours = set()
-
-    curr = data[0]
-    next = data[1]
-
-    if curr == next:
-        return min_distance(c1, c2, data[1:], examined_colours, distance)
-
-    else:
-        return distance
+DATA_STREAM = 'y y b y y r end'
 
 
+def start_point(c, data):
+    """Generate the starting point of the algorithm"""
+    for idx, value in enumerate(data):
+        if value == c:
+            yield idx+1, data[idx+1:]
+
+
+def min_distance(c1, c2, data):
+    """Find the minimum distance"""
+    if c1 == c2:
+        return 0
+
+    distances = []
+    for idx, dat in start_point(c1, data):
+        forward = dat
+        backward = list(reversed(data[:idx-1]))
+
+        forward_dist = 0
+        for idx, c in enumerate(forward):
+            if idx == len(forward)-1:  # end of list without finding
+                forward_dist = 1000000  # some very large distance
+                distances.append(forward_dist)
+            else:
+                forward_dist += 1
+                if c == c2:
+                    distances.append(forward_dist)
+                    break
+
+        backward_dist = 0
+        for c in backward:
+            if idx == len(backward)-1:
+                backward_dist = 1000000
+                distances.append(backward_dist)
+            else:
+                backward_dist += 1
+                if c == c2:
+                    distances.append(backward_dist)
+                    break
+
+    return min(distances)
 
 
 if __name__ == "__main__":
-    print(min_distance(1, 2, DATA_STREAM.split(' ')))
+    data = DATA_STREAM.split((' '))
+    c1 = 'r'
+    c2 = 'b'
+    print("Input data \n", data)
+    print("min distance between '{}' and '{}' is {}".format(c1, c2, min_distance(c1, c2, data)))
+
