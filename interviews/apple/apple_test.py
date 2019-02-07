@@ -37,7 +37,6 @@ def test_min_distance(colour_1, colour_2, colour_data, expected):
     assert result == expected
 
 
-
 @pytest.mark.parametrize(
     'colour_1, colour_2, colour_data, error_msg',
     [
@@ -54,4 +53,3 @@ def test_min_distance_improper_input(colour_1, colour_2, colour_data, error_msg)
     with pytest.raises(Exception) as e_info:
         min_distance(colour_1, colour_2, colour_data)
     assert error_msg in str(e_info.value)
-
