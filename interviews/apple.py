@@ -31,10 +31,10 @@ and can't query or colours other than these
 - Assume that there are no spelling errors in the data set, and a given
 string will be read without any special parsing, explicitly
 - Assume
+- Assume that there is some arbitrarily large maximum distance possible
+between cars
 
 TODO:
-- Tests
-- Make operations all in-place and explicitly so
 - Complexity analysis
 """
 
@@ -81,8 +81,8 @@ def min_distance(colour_1, colour_2, colour_data):
             for idx, colour in enumerate(sub_array):
                 # Reached end of sub array without finding colour_2
                 if idx == len(sub_array) - 1:
-                    # Set to some very large distance
-                    distance = 1000000
+                    # Set to some arbitrarily large distance
+                    distance = 1e6
                     distances.append(distance)
 
                 distance += 1
