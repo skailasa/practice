@@ -12,11 +12,11 @@ import (
 )
 
 // Initialise slice
-var palette = []color.Color{color.White, color.Black}
+var palette = []color.Color{color.Black, color.RGBA{12, 233, 137, 1}}
 
 const (
-	whiteIndex = 0 // first colour in pallete
-	blackIndex = 1 // second colour in pallete
+	blackIndex = 0 // first colour in palette
+	greenIndex = 1 // second colour in palette
 )
 
 func main() {
@@ -41,8 +41,7 @@ func lissajous(out io.Writer) {
 		for t := 0.0; t < cycles*2*math.Pi; t += res {
 			x := math.Sin(t)
 			y := math.Sin(t*freq + phase)
-			img.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5),
-				blackIndex)
+			img.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5), greenIndex)
 		}
 		phase += 0.1
 		anim.Delay = append(anim.Delay, delay)
