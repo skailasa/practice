@@ -118,7 +118,7 @@ def min_distance(colour_1, colour_2, colour_data):
     :return int: The minimum distance between cars of colour_1 and
     colour_2.
     """
-    max_distance = 1e6
+    max_dist = 1e6
 
     if colour_1 == colour_2:
         return 0
@@ -135,7 +135,7 @@ def min_distance(colour_1, colour_2, colour_data):
                 # Reached end of sub array without finding colour_2
                 if idx == len(sub_array) - 1:
                     # Set to some arbitrarily large distance
-                    distances.append(max_distance)
+                    distances.append(max_dist)
 
                 distance += 1
                 if colour == colour_2:
@@ -145,11 +145,13 @@ def min_distance(colour_1, colour_2, colour_data):
                     distances.append(distance)
                     break
 
-    if not distances:
+    min_dist = min(distances)
+
+    if not distances or min_dist == max_dist:
         raise ValueError(
             'Queried data set with unsupported colours',
             colour_1,
             colour_2,
         )
 
-    return min(distances)
+    return min_dist

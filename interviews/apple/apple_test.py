@@ -37,10 +37,11 @@ def test_min_distance(colour_1, colour_2, colour_data, expected):
     assert result == expected
 
 
+
 @pytest.mark.parametrize(
     'colour_1, colour_2, colour_data, error_msg',
     [
-        ('red', 'orange', 'red red blue red end',
+        ('red', 'green', 'red red blue red end',
          'Queried data set with unsupported colours')
     ]
 )
@@ -49,7 +50,8 @@ def test_min_distance_improper_input(colour_1, colour_2, colour_data, error_msg)
     Test that an error message is raised when you attempt to the
     function with a colour that doesn't exist
     """
+    colour_data = colour_data.split(' ')
     with pytest.raises(Exception) as e_info:
         min_distance(colour_1, colour_2, colour_data)
-        assert error_msg in str(e_info.value)
+    assert error_msg in str(e_info.value)
 
