@@ -1,4 +1,9 @@
-"""Unit tests for apple code test"""
+"""
+Unit tests for apple code test
+
+Test for simple cases provided, as well as exceptions.
+"""
+
 import pytest
 
 from .apple import min_distance, sub_array_generator
@@ -8,9 +13,14 @@ from .apple import min_distance, sub_array_generator
     'colour, colour_data, expected',
     [
         # colour we're looking for at beginning
-        ('red', 'red blue blue',
-         ([], ['blue', 'blue'])
-         )
+        ('red', 'red blue blue end',
+         ([], ['blue', 'blue end'])),
+        # colour we're looking for in the middle
+        ('blue', 'yellow red blue green black end',
+         (['red', 'yellow'], ['green', 'black'])),
+        # colour we're looking for at end
+        ('red', 'yellow blue red end',
+         ([], ['blue', 'yellow']))
     ]
 )
 def test_sub_array_generator(colour, colour_data, expected):
