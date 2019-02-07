@@ -10,11 +10,6 @@ and can be read once and interrogated many times. Sequence of
 observations could be very long (but assume it's short enough to be able
 to fit into memory).
 
-Lots of complications, so list any assumptions.
-List points for future work
-Testing
-Indicate complexity if known
-
 e.g.
 Input: red red blue red
 Params: red, blue
@@ -24,19 +19,70 @@ Input: yellow yellow blue yellow yellow red
 Params: red blue
 Output: 3
 
+Strategy:
+Loop through array to find colour1, from here loop forwards and
+backwards looking for colour2 storing the resulting distances. Repeat
+until all distances have been find, calculate minimum.
+
 Assumptions:
-- Assume you know all possible colours a car can take in a given data set,
-and can't query or colours other than these
-- Assume that the end of the data set can be marked with a sentinel
+- Assume you know all possible colours a car can take in a given data
+set, and can't query or colours other than these.
+- Assume that the end of the data set can be marked with a sentinel.
 - Assume that there are no spelling errors in the data set, and a given
-string will be read without any special parsing, explicitly
-- Assume
+string will be read without any special parsing, explicitly.
 - Assume that there is some arbitrarily large maximum distance possible
 between cars.
-- Assume
+- Assume all car colours are evenly distributed.
 
-TODO:
-- Complexity analysis
+
+Space Complexity Analysis:
+My solution operates on the data in-place, but my min distance
+calculation, is removable, instead one should just store a calculated
+distance if it is smaller than a cached 'current smallest distance'.
+
+Time Complexity Analysis:
+My solution is really just a nested loop:
+
+Outer Loop: loop through all possible points where we start with colour1.
+    Call this a 'start point'.
+    Inner Loop 1: loop forward from each start point to find colour2
+    Inner Loop 2: loop backward from each start point to find colour2
+    Store distances.
+    Calculate minimum distance
+
+In the worst case all colour1's are close to the middle, and colour 2 is
+located at beginning AND end of a given data set.
+
+e.g.
+colour1 = 'red'
+colour2 = 'blue'
+
+'blue x x x x red x x x x blue'
+
+In which case my algorithm will run in O(N(A+B)) = O(N^2), which we
+can use as an upper bound. Where N is the number of elements in the data
+set, and A and B are the length of the inner loops respectively. Even
+if there more occurrences of 'red' in the above example, the asymptotic
+complexity would be the same.
+
+This is because at the moment my algorithm finds the distances between
+all pairs of colour1 and colour2 to exhaustion, so in this scenario will
+have to iterate through the entire list for each start point.
+
+However, in the best case colour1 is at the beginning of the data set,
+with colour2 adjacent to it, the min possible distance, giving O(1).
+
+It's difficult to perform any analysis for how this amortizes without
+knowledge of the distribution of car colours. Operating under the
+assumption that all car colours are evenly distributed, we would again
+get O(N(A+B)) asymptotic time complexity, as the fundamental algorithm
+is still a nested loop.
+
+Improvements to Algorithm/Implementation:
+The runtime complexity faces the bottleneck of nested loop, however
+looping over the forward running, and backward running sub arrays is
+trivially parallelisable as they don't depend on each other at all.
+This won't change the complexity, but would speed up computation.
 """
 
 
@@ -99,24 +145,7 @@ def min_distance(colour_1, colour_2, colour_data):
         raise ValueError(
             'Queried data set with unsupported colours',
             colour_1,
-            colour_2
+            colour_2,
         )
 
     return min(distances)
-
-
-if __name__ == "__main__":
-    data_stream = 'red orange blue green yellow blue green red end'
-    data = data_stream.split((' '))
-    c1 = 'orange'
-    c2 = 'red'
-
-    print("Input data \n", data)
-    print(
-        "Minimum distance between '{}' and '{}' is {}".format(
-            c1,
-            c2,
-            min_distance(c1, c2, data)
-        )
-    )
-
