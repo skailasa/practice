@@ -12,7 +12,7 @@ from .apple import min_distance, sub_array_generator
          ([], ['blue', 'blue'])
          )
     ]
-)mv
+)
 def test_sub_array_generator(colour, colour_data, expected):
     """Test that we generate correct left/right subarrays """
     result = sub_array_generator(colour, colour_data)

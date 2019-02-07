@@ -22,7 +22,7 @@ Output: 3
 Strategy:
 Loop through array to find colour1, from here loop forwards and
 backwards looking for colour2 storing the resulting distances. Repeat
-until all distances have been find, calculate minimum.
+until all distances have been found, calculate minimum.
 
 Assumptions:
 - Assume you know all possible colours a car can take in a given data
@@ -33,7 +33,6 @@ string will be read without any special parsing, explicitly.
 - Assume that there is some arbitrarily large maximum distance possible
 between cars.
 - Assume all car colours are evenly distributed.
-
 
 Space Complexity Analysis:
 My solution operates on the data in-place, but my min distance
@@ -83,6 +82,11 @@ The runtime complexity faces the bottleneck of nested loop, however
 looping over the forward running, and backward running sub arrays is
 trivially parallelisable as they don't depend on each other at all.
 This won't change the complexity, but would speed up computation.
+
+Instead of exhaustively looking for all the distances an improvement
+to the algorithm would be to break the inner loop if a distance is
+greater than a cached 'current smallest distance', however I do not
+have enough time to improve my implementation.
 """
 
 
