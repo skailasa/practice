@@ -1,6 +1,4 @@
-'''Unit tests for apple code test'''
-from unittest.mock import patch
-
+"""Unit tests for apple code test"""
 import pytest
 
 from .apple import min_distance, sub_array_generator
@@ -40,7 +38,7 @@ def test_min_distance(colour_1, colour_2, colour_data, expected):
 @pytest.mark.parametrize(
     'colour_1, colour_2, colour_data, error_msg',
     [
-        ('red', 'notRealColour', 'red red blue red end',
+        ('red', 'orange', 'red red blue red end',
          'Queried data set with unsupported colours')
     ]
 )

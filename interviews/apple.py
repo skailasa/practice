@@ -32,7 +32,8 @@ and can't query or colours other than these
 string will be read without any special parsing, explicitly
 - Assume
 - Assume that there is some arbitrarily large maximum distance possible
-between cars
+between cars.
+- Assume
 
 TODO:
 - Complexity analysis
@@ -67,6 +68,8 @@ def min_distance(colour_1, colour_2, colour_data):
     :return int: The minimum distance between cars of colour_1 and
     colour_2.
     """
+    max_distance = 1e6
+
     if colour_1 == colour_2:
         return 0
 
@@ -82,8 +85,7 @@ def min_distance(colour_1, colour_2, colour_data):
                 # Reached end of sub array without finding colour_2
                 if idx == len(sub_array) - 1:
                     # Set to some arbitrarily large distance
-                    distance = 1e6
-                    distances.append(distance)
+                    distances.append(max_distance)
 
                 distance += 1
                 if colour == colour_2:
