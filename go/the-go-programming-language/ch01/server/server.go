@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"sync"
 
 	)
@@ -19,7 +20,11 @@ func main() {
 	http.HandleFunc("/", handler) //each request calls handler
 	http.HandleFunc("/count", counter) //A url that returns num of requests
 	http.HandleFunc("/lissajous", func(w http.ResponseWriter, r *http.Request) {
-		lissajous(w)
+		query_vals := r.URL.Query()
+		scycles := query_vals.Get("cycles")
+
+		fcycles, _ := strconv.ParseFloat(scycles, 64)
+		lissajous(w, fcycles)
 	})
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }
