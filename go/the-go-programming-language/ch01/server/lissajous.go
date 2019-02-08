@@ -8,7 +8,6 @@ import (
 	"io"
 	"math"
 	"math/rand"
-	"os"
 )
 
 // Initialise slice
@@ -18,10 +17,6 @@ const (
 	blackIndex = 0 // first colour in palette
 	greenIndex = 1 // second colour in palette
 )
-
-func main() {
-	lissajous(os.Stdout)
-}
 
 func lissajous(out io.Writer) {
 	const (
