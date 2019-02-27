@@ -68,7 +68,7 @@ def main():
     args = parse_cl_arguments()
     filepath = args.filepath 
     substance_data = load_substance_data(filepath)
-    res = requests.post('http://localhost:5000/', json=substance_data)
+    res = requests.post('http://localhost:5000', json=substance_data)
     
     if res.ok:
         print(res.json())
