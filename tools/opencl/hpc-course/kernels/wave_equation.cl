@@ -29,7 +29,8 @@ __kernel void wave_eq_1D(__global float *u2,
 	else {
 	    right = idx + 1;
 	}
-    u2[idx] = 2 * u1[idx] \
+
+	u2[idx] = 2 * u1[idx] \
                  - u0[idx] \
                  + (c*c) \
                     * (dt * dt) / (dx * dx) \
