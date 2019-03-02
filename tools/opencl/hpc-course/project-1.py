@@ -41,6 +41,7 @@ def differential_operator(u, dim):
     # Calculate sigma
     sigma = np.exp(-S)
 
+    # parallelise this bit
     for i in range(M):
         for j in range(N):
             if i == 0 or i == M-1 or j == 0 or j == N - 1:
@@ -73,7 +74,7 @@ def rhs(dim):
             if i == 0 or i == M-1 or j == 0 or j == N - 1:
                 res[i*M+j] = 0  # boundary conditions
             else:
-                res[i*M+j] = h**2
+                res[i*M+j] = -h**2
 
     return res
 
@@ -100,7 +101,7 @@ def plot_simulation(dim, solver):
     xs, ys = np.meshgrid(x, y)
     zs = sol[0].reshape((dim, dim))
 
-    ax.plot_surface(xs, ys, -zs, rstride=1, cstride=1, cmap='hot')
+    ax.plot_surface(xs, ys, zs, rstride=1, cstride=1, cmap='hot')
 
     plt.show()
 
