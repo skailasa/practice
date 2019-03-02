@@ -80,11 +80,10 @@ def rhs(dim):
 
 def run_simulation(dim, solver):
     """Run simulation with a mesh of size 'dim' and given iterative method"""
-    np.random.seed(1)
 
     operator = partial(differential_operator, dim=dim)
-
     A = spla.LinearOperator((dim**2, dim**2), operator)
+
     return SOLVERS[solver](A, rhs(dim))
 
 
@@ -106,9 +105,10 @@ def plot_simulation(dim, solver):
     plt.show()
 
 
-def main():
-    plot_simulation(20, 'gmres')
+def main(dim, solver):
+    plot_simulation(dim, solver)
 
 
 if __name__ == "__main__":
-    main()
+    dim, solver = 10, 'gmres'
+    main(dim, solver)
