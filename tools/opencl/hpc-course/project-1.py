@@ -39,7 +39,7 @@ def fractional_sigma(sigma, i, j, M):
     return sigma_i, sigma_i_minus, sigma_j, sigma_j_minus
 
 
-def differential_operator(u, dim):
+def differential_operator_np(u, dim):
     """Apply the differential operator to a vector u"""
     # dimensions of solution vector
     M = dim  # rows
@@ -90,7 +90,7 @@ def rhs(dim):
     return res
 
 
-def differential_operator_open_cl(u, dim, kernel_fp):
+def differential_operator_cl(u, dim, kernel_fp):
     cl_ctx, cl_queue, mf = open_cl_setup()
     kernel_src = open(kernel_fp, 'r').read()
 
@@ -132,14 +132,14 @@ def run_simulation(dim, solver, method, kernel_fp):
     iterative method
     """
 
-    if method == 'numpy':
-        operator = partial(differential_operator, dim=dim)
-    elif method == 'open_cl':
+    if method == 'np':
+        operator = partial(differential_operator_np, dim=dim)
+    elif method == 'cl':
         operator = partial(
-            differential_operator_open_cl, dim=dim, kernel_fp=kernel_fp
+            differential_operator_cl, dim=dim, kernel_fp=kernel_fp
         )
     else:
-        return "Must select valid solver method, 'numpy' or 'open_cl'"
+        return "Must select valid solver method, 'np' or 'cl'"
 
     A = spla.LinearOperator((dim**2, dim**2), operator)
     return SOLVERS[solver](A, rhs(dim))
@@ -170,7 +170,7 @@ def main(dim, solver, method, kernel_fp):
 if __name__ == "__main__":
     dim = 100
     solver = 'gmres'
-    method = 'open_cl'
+    method = 'cl'
     kernel_fp = 'kernels/poisson_equation_2d.cl'
 
     main(dim, solver, method, kernel_fp)
