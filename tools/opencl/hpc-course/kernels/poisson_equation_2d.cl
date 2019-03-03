@@ -1,6 +1,6 @@
 /*
-Kernel for parallelising the matrix vector product for the solution of the 2D
-poisson-equation solver
+Kernel for parallelising the matrix vector product for the solution of
+the 2D poisson-equation solver
 */
 
 
@@ -11,9 +11,6 @@ __kernel void matVec(const int M, const int N,
                             ) {
 
     // Thread identifiers
-    //const int i = 2*get_global_id(0); // Row ID of product (0..M)
-    //const int j = 2*get_global_id(0)+1; // Col ID of product (0..N)
-
     const int i = get_global_id(0);
     const int j = get_global_id(1);
 
