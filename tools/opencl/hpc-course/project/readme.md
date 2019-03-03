@@ -2,19 +2,28 @@
 
 We're trying to solve 
 
-![poisson-eq](static/eq1.gif)
+<p align="center">
+    <img src="static/eq1.gif" alt="poisson-eq">
+</p>
 
 where 
 
-![rhs](static/eq2.gif)
+
+<p align="center">
+    <img src="static/eq2.gif" alt="rhs">
+</p>
 
 using the following discretisation
 
-![discrete-operator](static/eq3.gif)
+<p align="center">
+    <img src="static/eq3.gif" alt="discretisation">
+</p>
 
 under the assumption that we can approximate
 
-![sigma](static/eq4.gif)
+<p align="center">
+    <img src="static/eq4.gif" alt="sigma">
+</p>
 
 i.e. by weighted means.
 
