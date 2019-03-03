@@ -19,7 +19,7 @@ Run:
 
 ```bash
 chmod +x fenics
-./fenics "pythno3 <my-fenics-script>.py
+./fenics "python3 <my-fenics-script>.py
 ```
 
 or add to `.bashrc`
