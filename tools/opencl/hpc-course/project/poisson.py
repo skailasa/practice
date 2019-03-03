@@ -1,5 +1,7 @@
 """
 Code to solve the poisson equation using FDM.
+
+This script implements a Numpy as well as an OpenCL solver
 """
 from functools import partial
 
@@ -171,6 +173,6 @@ if __name__ == "__main__":
     dim = 100
     solver = 'gmres'
     method = 'cl'
-    kernel_fp = 'kernels/poisson_equation_2d.cl'
+    kernel_fp = 'project/kernels/matvec.cl'
 
     main(dim, solver, method, kernel_fp)
