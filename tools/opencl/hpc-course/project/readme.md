@@ -55,7 +55,7 @@ docker pull quay.io/fenicsproject/stable
 chmod +x fenics
 
 # Run python script in container
-./fenics "python3 <my-fenics-script>.py
+./fenics "python3 <my-fenics-script>.py"
 ```
 
 The script mounts a volume to whichever directory you launch from
