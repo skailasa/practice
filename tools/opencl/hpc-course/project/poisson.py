@@ -63,7 +63,9 @@ def fractional_sigma(sigma, i, j, M):
 
 
 def differential_operator_np(u, dim, sigma_type):
-    """Apply the differential operator to a vector u"""
+    """
+    Apply the differential operator to a vector u using Numpy arrays
+    """
     # dimensions of solution vector
     M = dim  # rows
     N = dim   # cols
@@ -75,9 +77,8 @@ def differential_operator_np(u, dim, sigma_type):
     else:
         return "Must select valid sigma type"
 
+    # buffer for result of linear operator application
     res = np.zeros(shape=(M*N,))
-
-    # Calculate sigma
 
     for i in range(M):
         for j in range(N):
@@ -117,6 +118,9 @@ def rhs(dim):
 
 
 def differential_operator_cl(u, dim, kernel_fp):
+    """
+    Apply the differential operator to a vector u using OpenCL
+    """
     cl_ctx, cl_queue, mf = open_cl_setup()
     kernel_src = open(kernel_fp, 'r').read()
 
@@ -155,8 +159,7 @@ def differential_operator_cl(u, dim, kernel_fp):
 
 def run_simulation(dim, solver, method, kernel_fp, sigma_type):
     """
-    Run simulation with a mesh of size 'dim' and given
-    iterative method
+    Run simulation with a mesh of size 'dim' and given iterative method
     """
 
     if method == 'np':
@@ -182,26 +185,21 @@ def plot_simulation(dim, solver, method, kernel_fp, sigma_type, plot_type):
 
     zs = sol[0].reshape((dim, dim))
 
+    fig = plt.figure()
+
     if plot_type == '3d':
-        fig = plt.figure()
         ax = Axes3D(fig)
         xs, ys = np.meshgrid(x, y)
         ax.plot_surface(xs, ys, zs, rstride=1, cstride=1, cmap='hot')
         plt.show()
 
     elif plot_type == '2d':
-        fig = plt.figure()
-        plt.matshow(zs, origin='lower', interpolation='none')
+        ax = plt.axes(fig)
+        ax.matshow(zs, origin='lower', interpolation='none')
         plt.show()
 
     else:
         return "Must select valid plot type"
-
-
-
-
-def main(dim, solver, method, kernel_fp, sigma_type, plot_type):
-    plot_simulation(dim, solver, method, kernel_fp, sigma_type, plot_type)
 
 
 if __name__ == "__main__":
@@ -209,7 +207,7 @@ if __name__ == "__main__":
     solver = 'gmres'
     method = 'cl'
     sigma_type='polynomial'
-    plot_type='2d'
+    plot_type='3d'
     kernel_fp = 'project/kernels/matvec.cl'
 
-    main(dim, solver, method, kernel_fp, sigma_type, plot_type)
+    plot_simulation(dim, solver, method, kernel_fp, sigma_type, plot_type)
