@@ -52,4 +52,4 @@ chmod +x fenics
 ./fenics "python3 <my-fenics-script>.py
 ```
 
-or add to `.bashrc`
+or add the fenics command to `.bashrc`

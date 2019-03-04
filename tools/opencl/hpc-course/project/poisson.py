@@ -3,6 +3,7 @@ Code to solve the poisson equation using FDM.
 
 This script implements a Numpy as well as an OpenCL solver
 """
+import time
 from functools import partial
 
 import matplotlib.pyplot as plt
@@ -29,6 +30,26 @@ def open_cl_setup():
     return cl_ctx, cl_queue, mf
 
 
+def sigma_random(dim):
+    """Random, normally distributed sigma values"""
+    mu, sigma = 0, 0.1
+    np.random.seed(1)
+    S = np.random.normal(mu, sigma, dim*dim)
+
+    return np.exp(-S)
+
+
+def sigma_polynomial(dim):
+    """
+    Sigma values given by applying equation f(x, y)=1+x^2+y, for
+    validation
+    """
+    x = np.arange(0, 1, 1/dim)
+    y = np.arange(0, 1, 1/dim)
+    xs, ys = np.meshgrid(x, y)
+    return 1 + xs**2 + ys**2
+
+
 def fractional_sigma(sigma, i, j, M):
     """Find fractionally indexed values of sigma, using weigthed means"""
 
@@ -41,19 +62,22 @@ def fractional_sigma(sigma, i, j, M):
     return sigma_i, sigma_i_minus, sigma_j, sigma_j_minus
 
 
-def differential_operator_np(u, dim):
+def differential_operator_np(u, dim, sigma_type):
     """Apply the differential operator to a vector u"""
     # dimensions of solution vector
     M = dim  # rows
     N = dim   # cols
 
-    mu, sigma = 0, 0.1
-    np.random.seed(1)
-    S = np.random.normal(mu, sigma, M*N)
+    if sigma_type == 'random':
+        sigma = sigma_random(dim)
+    elif sigma_type == 'polynomial':
+        sigma = sigma_polynomial(dim)
+    else:
+        return "Must select valid sigma type"
+
     res = np.zeros(shape=(M*N,))
 
     # Calculate sigma
-    sigma = np.exp(-S)
 
     for i in range(M):
         for j in range(N):
@@ -101,11 +125,12 @@ def differential_operator_cl(u, dim, kernel_fp):
     n = np.int32(dim)   # cols
 
     # Calculate sigma
-    mu, sigma = 0, 0.1
-    np.random.seed(1)
-    s = np.random.normal(mu, sigma, m*n)
-    sigma = np.exp(-s)
-    sigma = np.array(sigma, dtype=np.float64)
+    if sigma_type == 'random':
+        sigma = sigma_random(dim)
+    elif sigma_type == 'polynomial':
+        sigma = sigma_polynomial(dim)
+    else:
+        return "Must select valid sigma type"
 
     # Upload data to the device
     u_gpu = cl.Buffer(cl_ctx, mf.READ_WRITE | mf.COPY_HOST_PTR, hostbuf=u)
@@ -128,14 +153,14 @@ def differential_operator_cl(u, dim, kernel_fp):
     return product
 
 
-def run_simulation(dim, solver, method, kernel_fp):
+def run_simulation(dim, solver, method, kernel_fp, sigma_type):
     """
     Run simulation with a mesh of size 'dim' and given
     iterative method
     """
 
     if method == 'np':
-        operator = partial(differential_operator_np, dim=dim)
+        operator = partial(differential_operator_np, dim=dim, sigma_type=sigma_type)
     elif method == 'cl':
         operator = partial(
             differential_operator_cl, dim=dim, kernel_fp=kernel_fp
@@ -147,32 +172,44 @@ def run_simulation(dim, solver, method, kernel_fp):
     return SOLVERS[solver](A, rhs(dim))
 
 
-def plot_simulation(dim, solver, method, kernel_fp):
+def plot_simulation(dim, solver, method, kernel_fp, sigma_type, plot_type):
     """Run and plot simulation"""
-    fig = plt.figure()
-    ax = Axes3D(fig)
 
-    x = np.arange(0,1,1/dim)
-    y = np.arange(0,1,1/dim)
+    x = np.arange(0, 1, 1/dim)
+    y = np.arange(0, 1, 1/dim)
 
-    sol = run_simulation(dim, solver, method, kernel_fp)
+    sol = run_simulation(dim, solver, method, kernel_fp, sigma_type)
 
-    xs, ys = np.meshgrid(x, y)
     zs = sol[0].reshape((dim, dim))
 
-    ax.plot_surface(xs, ys, zs, rstride=1, cstride=1, cmap='hot')
+    if plot_type == '3d':
+        fig = plt.figure()
+        ax = Axes3D(fig)
+        xs, ys = np.meshgrid(x, y)
+        ax.plot_surface(xs, ys, zs, rstride=1, cstride=1, cmap='hot')
+        plt.show()
 
-    plt.show()
+    elif plot_type == '2d':
+        fig = plt.figure()
+        plt.matshow(zs, origin='lower', interpolation='none')
+        plt.show()
+
+    else:
+        return "Must select valid plot type"
 
 
-def main(dim, solver, method, kernel_fp):
-    plot_simulation(dim, solver, method, kernel_fp)
+
+
+def main(dim, solver, method, kernel_fp, sigma_type, plot_type):
+    plot_simulation(dim, solver, method, kernel_fp, sigma_type, plot_type)
 
 
 if __name__ == "__main__":
-    dim = 100
+    dim = 50
     solver = 'gmres'
     method = 'cl'
+    sigma_type='polynomial'
+    plot_type='2d'
     kernel_fp = 'project/kernels/matvec.cl'
 
-    main(dim, solver, method, kernel_fp)
+    main(dim, solver, method, kernel_fp, sigma_type, plot_type)
