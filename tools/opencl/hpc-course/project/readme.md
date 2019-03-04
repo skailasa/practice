@@ -48,8 +48,16 @@ docker container.
 Run:
 
 ```bash
+# If you don't have the fenics image
+docker pull quay.io/fenicsproject/stable
+
+# Add executable
 chmod +x fenics
+
+# Run python script in container
 ./fenics "python3 <my-fenics-script>.py
 ```
 
-or add the fenics command to `.bashrc`
+The script mounts a volume to whichever directory you launch from
+so you can copy over data etc from your simulation.
+
