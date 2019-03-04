@@ -4,6 +4,7 @@ Code to solve the Poisson equation using Fenics FRM
 from dolfin import *
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
+from mpl_toolkits.mplot3d import axes3d, Axes3D
 
 
 def on_boundary(x, on_boundary):
@@ -47,23 +48,32 @@ def run_simulation(dim):
     u = Function(V)
     solve(a == L, u, boundary_condition)
 
-
     return u, mesh
 
 
-def plot_simulation(dim):
+def plot_simulation(dim, plot_type):
     """Run and plot simulation"""
     u, mesh = run_simulation(dim)
 
     C = u.compute_vertex_values(mesh)
 
-    plt.tripcolor(mesh2triang(mesh), C, shading='gouraud')
-    plt.axis('equal')
+    fig = plt.figure()
+
+    if plot_type == '3d':
+        ax = Axes3D(fig)
+        ax.plot_trisurf(mesh2triang(mesh), C, linewidth=0.2, antialiased=True)
+
+    elif plot_type == '2d':
+        plt.tripcolor(mesh2triang(mesh), C, shading='gouraud')
+
+    else:
+        return "must enter plotting type '2d' or '3d'"
+
     plt.savefig('poisson/test.png')
 
 
 def main():
-    plot_simulation(10)
+    plot_simulation(10, plot_type='3d')
 
 
 if __name__ == "__main__":
