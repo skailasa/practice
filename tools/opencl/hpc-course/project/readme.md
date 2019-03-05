@@ -61,3 +61,22 @@ chmod +x fenics
 The script mounts a volume to whichever directory you launch from
 so you can copy over data etc from your simulation.
 
+### Develop on Jupyter notebooks using docker
+
+```bash
+# Add fenics-jupyter script as executable
+chmod +x fenics-jupyter
+
+# Launch interactive container
+./fenics-jupyter
+```
+
+From inside the container
+
+```bash
+# Launch jupyter server, and allow host access
+
+jupyter notebook --ip 0.0.0.0 --no-browser --allow-root
+```
+
+The server will be available on the host machine at `localhost:8888`

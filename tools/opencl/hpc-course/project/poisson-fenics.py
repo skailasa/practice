@@ -69,11 +69,12 @@ def plot_simulation(dim, plot_type):
     else:
         return "must enter plotting type '2d' or '3d'"
 
+    plt.axis('equal')
     plt.savefig('poisson/test.png')
 
 
 def main():
-    plot_simulation(10, plot_type='3d')
+    plot_simulation(10, plot_type='2d')
 
 
 if __name__ == "__main__":
