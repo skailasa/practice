@@ -117,7 +117,7 @@ def rhs(dim):
     return res
 
 
-def differential_operator_cl(u, dim, kernel_fp):
+def differential_operator_cl(u, dim, kernel_fp, sigma_type):
     """
     Apply the differential operator to a vector u using OpenCL
     """
@@ -144,12 +144,16 @@ def differential_operator_cl(u, dim, kernel_fp):
     product_gpu = cl.Buffer(cl_ctx, mf.READ_WRITE, u.nbytes)
 
     # Build kernel
+    tile_size = 1
+    global_work_group = (m, n)
+    local_work_group = (tile_size, tile_size)
     kernel_args = (m, n, sigma_gpu, u_gpu, product_gpu)
     prg = cl.Program(cl_ctx, kernel_src).build()
     mat_vec = prg.matVec
 
     # Execute kernel on device
-    mat_vec(cl_queue, (m, n), None, *kernel_args)
+
+    mat_vec(cl_queue, global_work_group, local_work_group, *kernel_args)
 
     product = np.empty(m*n, dtype=np.float64)
     cl.enqueue_copy(cl_queue, product, product_gpu)
@@ -163,11 +167,20 @@ def run_simulation(dim, solver, method, kernel_fp, sigma_type):
     """
 
     if method == 'np':
-        operator = partial(differential_operator_np, dim=dim, sigma_type=sigma_type)
+        operator = partial(
+            differential_operator_np,
+            dim=dim,
+            sigma_type=sigma_type
+        )
+
     elif method == 'cl':
         operator = partial(
-            differential_operator_cl, dim=dim, kernel_fp=kernel_fp
+            differential_operator_cl,
+            dim=dim,
+            kernel_fp=kernel_fp,
+            sigma_type=sigma_type
         )
+
     else:
         return "Must select valid solver method, 'np' or 'cl'"
 
