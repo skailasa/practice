@@ -47,7 +47,7 @@ def sigma_polynomial(dim):
     x = np.arange(0, 1, 1/dim)
     y = np.arange(0, 1, 1/dim)
     xs, ys = np.meshgrid(x, y)
-    return 1 + xs**2 + ys**2
+    return (1 + xs**2 + ys**2).flatten()
 
 
 def fractional_sigma(sigma, i, j, M):
@@ -195,9 +195,7 @@ def plot_simulation(dim, solver, method, kernel_fp, sigma_type, plot_type):
     y = np.arange(0, 1, 1/dim)
 
     sol = run_simulation(dim, solver, method, kernel_fp, sigma_type)
-
     zs = sol[0].reshape((dim, dim))
-
     fig = plt.figure()
 
     if plot_type == '3d':
@@ -207,8 +205,7 @@ def plot_simulation(dim, solver, method, kernel_fp, sigma_type, plot_type):
         plt.show()
 
     elif plot_type == '2d':
-        ax = plt.axes(fig)
-        ax.matshow(zs, origin='lower', interpolation='none')
+        plt.imshow(zs, origin='lower', interpolation='none')
         plt.show()
 
     else:
@@ -216,11 +213,11 @@ def plot_simulation(dim, solver, method, kernel_fp, sigma_type, plot_type):
 
 
 if __name__ == "__main__":
-    dim = 50
+    dim = 10
     solver = 'gmres'
-    method = 'cl'
+    method = 'np'
     sigma_type='polynomial'
-    plot_type='3d'
+    plot_type='2d'
     kernel_fp = 'project/kernels/matvec.cl'
 
     plot_simulation(dim, solver, method, kernel_fp, sigma_type, plot_type)
