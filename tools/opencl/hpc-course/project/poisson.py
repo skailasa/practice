@@ -213,9 +213,9 @@ def plot_simulation(dim, solver, method, kernel_fp, sigma_type, plot_type):
 
 
 if __name__ == "__main__":
-    dim = 10
+    dim = 100
     solver = 'gmres'
-    method = 'np'
+    method = 'cl'
     sigma_type='polynomial'
     plot_type='2d'
     kernel_fp = 'project/kernels/matvec.cl'
