@@ -7,6 +7,7 @@ import time
 from functools import partial
 
 import matplotlib.pyplot as plt
+from matplotlib import cm
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 import numpy as np
 import scipy.sparse.linalg as spla
@@ -188,12 +189,43 @@ def run_simulation(dim, solver, method, kernel_fp, sigma_type):
     return SOLVERS[solver](A, rhs(dim))
 
 
+def analytic_solution(dim):
+    """Analytic solution of poisson equation with a point source"""
+    x = np.arange(0, 1+1/dim, 1/dim)
+    y = np.arange(0, 1+1/dim, 1/dim)
+    xs, ys = np.meshgrid(x, y)
+
+    xs = xs.flatten()
+    ys = ys.flatten()
+    sol = np.divide(1, np.sqrt((xs-0.501)**2+(ys-0.5)**2))
+
+    return (xs.reshape((dim+1, dim+1)),
+            ys.reshape((dim+1, dim+1)),
+            sol.reshape((dim+1,dim+1)))
+
+
+def plot_analytic_solution(dim):
+    """
+    Find and plot an approximation of an analytic soln with a point
+    source
+    """
+    xs, ys, sol = analytic_solution(dim)
+
+    fig = plt.figure()
+    ax = Axes3D(fig)
+
+    ax.plot_surface(xs, ys, sol, rstride=1, cstride=1, cmap=cm.rainbow)
+    ax.set_title("Analytic solution with point source")
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    plt.show()
+
+
 def plot_simulation(dim, solver, method, kernel_fp, sigma_type, plot_type):
     """Run and plot simulation"""
 
     x = np.arange(0, 1, 1/dim)
     y = np.arange(0, 1, 1/dim)
-
     sol = run_simulation(dim, solver, method, kernel_fp, sigma_type)
     zs = sol[0].reshape((dim, dim))
     fig = plt.figure()
@@ -201,7 +233,7 @@ def plot_simulation(dim, solver, method, kernel_fp, sigma_type, plot_type):
     if plot_type == '3d':
         ax = Axes3D(fig)
         xs, ys = np.meshgrid(x, y)
-        ax.plot_surface(xs, ys, zs, rstride=1, cstride=1, cmap='hot')
+        ax.plot_surface(xs, ys, zs, rstride=1, cstride=1, cmap='rainbow')
         plt.show()
 
     elif plot_type == '2d':
@@ -213,7 +245,7 @@ def plot_simulation(dim, solver, method, kernel_fp, sigma_type, plot_type):
 
 
 if __name__ == "__main__":
-    dim = 100
+    dim = 10
     solver = 'gmres'
     method = 'cl'
     sigma_type='polynomial'
@@ -221,3 +253,5 @@ if __name__ == "__main__":
     kernel_fp = 'project/kernels/matvec.cl'
 
     plot_simulation(dim, solver, method, kernel_fp, sigma_type, plot_type)
+
+    #plot_analytic_solution(dim)
