@@ -30,7 +30,7 @@ def sigma_random(dim):
     return np.array(np.exp(-S), dtype=np.float32)
 
 
-def run_simulation(kernel_fp, sigma, u0, dim, nt=30):
+def run_simulation(kernel_fp, sigma, u0, dim, nt=5):
 
     cl_ctx, cl_queue, mf = open_cl_setup()
     kernel_src = open(kernel_fp, 'r').read()
@@ -75,6 +75,11 @@ def gaussian(dim):
     covariance = np.diag(sigma ** 2)
 
     z = multivariate_normal.pdf(xy, mean=mu, cov=covariance)
+
+    for i in range(dim):
+        for j in range(dim):
+            if i == 0 or i == dim-1 or j == 0 or j == dim-1:
+                z[i*dim+j] = 0
 
     return np.array(z, dtype=np.float32)
 

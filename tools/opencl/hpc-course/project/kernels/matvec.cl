@@ -40,7 +40,6 @@ __kernel void matVec(const int M, const int N,
                 + sjm*u[i*M+j-1]
                 - alpha*u[i*M+j]
             );
-
         }
 
     // Store the result
