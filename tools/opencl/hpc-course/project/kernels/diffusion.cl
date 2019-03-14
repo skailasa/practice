@@ -22,7 +22,6 @@ __kernel void diffusion(__global float* u1,
     const int j = get_global_id(1);
 
     // For a single element in the result
-
     if (i == 0 || i == M-1 || j == 0 || j == N-1) {
             // Boundary conditions
             u1[i*M+j] = 0;
