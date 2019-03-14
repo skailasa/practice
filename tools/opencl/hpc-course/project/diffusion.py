@@ -153,4 +153,10 @@ if __name__ == "__main__":
 
     #plot_simulation(kernel_fp, sigma, u0, dim, timesteps, '3d')
 
-    print("benchmark: {} s".format(benchmark(run_simulation, *(kernel_fp, sigma, u0, dim, timesteps))))
+    print(
+        "benchmark: {} s".format(
+            benchmark(run_simulation,
+                      *(kernel_fp, sigma, u0, dim, timesteps)
+                      )
+        )
+    )
