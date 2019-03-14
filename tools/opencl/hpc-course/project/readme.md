@@ -43,6 +43,8 @@ Using a simple forward discretisation in time
     <img src="static/forward_time.gif" alt="time_disc">
 </p>
 
+This amounts to a model of time dependent diffusion.
+
 Convergence relies on an appropriately chosen timestep sizes.
 
 See [CFL Condition](https://en.wikipedia.org/wiki/Courant%E2%80%93Friedrichs%E2%80%93Lewy_condition)
