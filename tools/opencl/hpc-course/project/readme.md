@@ -30,12 +30,35 @@ i.e. by weighted means.
 Here I've taken sigma to be a matrix of normally
 distributed random numbers.
 
-## Run poisson solver on OpenCL/Numpy
+
+We can extend the analysis to solve the following parabolic equation:
+
+<p align="center">
+    <img src="static/parabolic.gif" alt="parabolic">
+</p>
+
+Using a simple forward discretisation in time
+
+<p align="center">
+    <img src="static/forward_time.gif" alt="time_disc">
+</p>
+
+Convergence relies on an appropriately chosen timestep sizes.
+
+See [CFL Condition](https://en.wikipedia.org/wiki/Courant%E2%80%93Friedrichs%E2%80%93Lewy_condition)
+
+## Run poisson/diffusion solvers on OpenCL/Numpy
 
 Create virtualenv running OpenCL, numpy and matplotlib.
 
 ```bash
 python3 poisson.py
+```
+
+or 
+
+```bash
+python3 diffusion.py
 ```
 
 No parameter parsing for now
