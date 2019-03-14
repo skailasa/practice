@@ -2,6 +2,8 @@
 Code to model a parabolic PDE using the spatial discretisation from
 'poisson.py', and simple forward difference scheme in time.
 """
+import time
+
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 import numpy as np
@@ -131,11 +133,24 @@ def plot_simulation(kernel_fp, sigma, u0, dim, timesteps, axis):
     plt.show()
 
 
+def benchmark(func, *args, **kwargs):
+    """Run a function 10 times, calculate mean time to run."""
+    t = []
+    for i in range(10):
+        s = time.time()
+        func(*args, **kwargs)
+        t.append(time.time()-s)
+
+    return np.mean(t)
+
+
 if __name__ == "__main__":
-    dim = 10
+    dim = 50
     kernel_fp = "kernels/diffusion.cl"
-    timesteps = 50
+    timesteps = 10
     sigma = sigma_random(dim)
     u0 = gaussian(dim)
 
-    plot_simulation(kernel_fp, sigma, u0, dim, timesteps, '3d')
+    #plot_simulation(kernel_fp, sigma, u0, dim, timesteps, '3d')
+
+    print("benchmark: {} s".format(benchmark(run_simulation, *(kernel_fp, sigma, u0, dim, timesteps))))
