@@ -4,7 +4,10 @@ project, using the spatial discretisation from part 1.
 */
 
 
-__kernel void diffusion(__global float* u1, __global float* u0, const __global float* sigma, const float dt) {
+__kernel void diffusion(__global float* u1,
+                        __global float* u0,
+                         const __global float* sigma,
+                         const float dt) {
 
 
     // Size of global problem
