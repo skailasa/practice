@@ -1,8 +1,3 @@
-"""
-
-"""
-
-
 class Animal:
     """Abstract creator"""
     def __init__(self, sound):
