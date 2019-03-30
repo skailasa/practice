@@ -20,6 +20,7 @@ def merge(nums1: List[int], nums2: List[int])->None:
     merged = False
     i = 0
     j = 0
+    nums1.append(9999)
 
     while not merged:
 
@@ -33,10 +34,11 @@ def merge(nums1: List[int], nums2: List[int])->None:
         if j == len(nums2):
             merged = True
 
+    nums1.pop()
+
 
 if __name__ == "__main__":
-    sentinel = 999999
-    l1 = [1, 2, 3, 4, sentinel]
+    l1 = [1]
     l2 = [4, 5, 6, 7]
 
     merge(l1, l2)
