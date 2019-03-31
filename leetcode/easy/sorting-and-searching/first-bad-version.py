@@ -27,7 +27,7 @@ def api_response(i):
 
 
 def first_bad_version(n):
-
+    """Recurse/Iterate to find first bad version"""
     mid = n // 2
 
     if api_response(mid):
@@ -36,6 +36,8 @@ def first_bad_version(n):
         for i in range(mid, n):
             if api_response(i):
                 tmp = i
+            else:
+                break
         print("first bad version: ", tmp)
 
     else:
