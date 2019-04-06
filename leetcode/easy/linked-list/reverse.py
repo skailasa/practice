@@ -7,6 +7,16 @@ class Node:
         self.next = None
 
 
+def print_linked_list(head):
+    tmp = []
+
+    while head is not None:
+        tmp.append(head.val)
+        head = head.next
+
+    print(tmp)
+
+
 def reverse(curr, prev=None):
     if curr is None:
         return
@@ -16,19 +26,18 @@ def reverse(curr, prev=None):
         curr.next = prev
 
 
-
 if __name__ == "__main__":
     n1 = Node(1)
     n2 = Node(2)
     n3 = Node(3)
     n4 = Node(4)
-    sentinel = Node(1000)
 
     n1.next = n2
     n2.next = n3
     n3.next = n4
-    n4.next = sentinel
+
+    print_linked_list(n1)
 
     reverse(n1)
 
-    print(n2.next.val)
+    print_linked_list(n4)
