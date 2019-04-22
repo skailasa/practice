@@ -176,6 +176,29 @@ void sendRecvExample() {
         MPI_COMM_WORLD, &status);
 }
 
+void reduceExample() {
+    int rank, size;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+    const int TERMS_PER_PROCESS = 1000;
+    double my_denominator = rank * TERMS_PER_PROCESS * 2 + 1;
+    double sign = 1;
+    double my_result = 0.0;
+    for (int i(0); i<TERMS_PER_PROCESS; ++i)
+    {
+        my_result += sign / my_denominator;
+        my_denominator += 2;
+        sign = -sign;
+    }
+
+    // Parallel reduction code goes here
+    double result;
+    int error = MPI_Reduce(&my_result, &result, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+}
+
+
+
 void main(int argc, char* argv[])
 {
    /***********************Ignore this stuff***********************/
