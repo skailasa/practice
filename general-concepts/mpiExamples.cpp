@@ -153,6 +153,29 @@ void computePrimesInParallelCollective() {
     }
 }
 
+void sendRecvExample() {
+
+    int myid, numprocs, left, right;
+    int buffer = 1;
+    int buffer2 = 0;
+
+    MPI_Request request;
+    MPI_Status status;
+ 
+    MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
+    MPI_Comm_rank(MPI_COMM_WORLD, &myid);
+ 
+    right = (myid + 1) % numprocs;
+    left = myid - 1;
+    if (left < 0)
+        left = numprocs - 1;
+ 
+    int error = MPI_Sendrecv(
+        &buffer, 1, MPI_INT, left, 123,
+        &buffer2, 1, MPI_INT, right, 123,
+        MPI_COMM_WORLD, &status);
+}
+
 void main(int argc, char* argv[])
 {
    /***********************Ignore this stuff***********************/
