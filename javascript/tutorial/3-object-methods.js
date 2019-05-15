@@ -15,7 +15,7 @@ user.sound = 'Hi!';
 
 user.sayHi();
 
-// don't have to use function expresssion
+// don't have to use function expression
 
 function sayBye() {
     console.log("Bye!");
@@ -75,10 +75,9 @@ this from a normal function
 let arrowExample = {
     name: "sri",
     sayHi() {
-        let arrow = () => console.log(this.name)
+        let arrow = () => console.log(this.name);
         arrow();
     }
 };
 
 arrowExample.sayHi();
-
