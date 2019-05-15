@@ -145,18 +145,18 @@ def benchmark(func, *args, **kwargs):
 
 
 if __name__ == "__main__":
-    dim = 50
+    dim = 10
     kernel_fp = "kernels/diffusion.cl"
-    timesteps = 10
+    timesteps = 50
     sigma = sigma_random(dim)
     u0 = gaussian(dim)
 
-    #plot_simulation(kernel_fp, sigma, u0, dim, timesteps, '3d')
+    plot_simulation(kernel_fp, sigma, u0, dim, timesteps, '3d')
 
-    print(
+    '''print(
         "benchmark: {} s".format(
             benchmark(run_simulation,
                       *(kernel_fp, sigma, u0, dim, timesteps)
                       )
         )
-    )
+    )'''

@@ -76,5 +76,5 @@ class Table:
 
 
 if __name__ == "__main__":
-    t = Table(A=[1, 2, 3, 400, 2], K=4)
+    t = Table(A=[1, 2, 3, 400, 2], K=2)
     t.draw_table()

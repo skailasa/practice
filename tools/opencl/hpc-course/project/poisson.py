@@ -3,7 +3,6 @@ Code to solve the poisson equation using FDM.
 
 This script implements a Numpy as well as an OpenCL solver
 """
-import time
 from functools import partial
 
 import matplotlib.pyplot as plt

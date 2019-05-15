@@ -112,7 +112,7 @@ class ImageProcessor:
         :return: Yield processed batches, using the instantiated
             processing function.
         """
-        batch_size = 32
+        batch_size = 5
 
         end = False
 
@@ -125,6 +125,7 @@ class ImageProcessor:
                 )
 
             for batch_of_filepaths in batched_filepaths:
+                print(batch_of_filepaths)
                 yield np.array([
                     self._processing_func(load_image(filepath))
                     for filepath in batch_of_filepaths
@@ -132,3 +133,13 @@ class ImageProcessor:
 
             if not run_forever:
                 end = True
+
+
+if __name__ == "__main__":
+    fps = ['a', 'b', 'c', 'd', 'e']
+    p = ImageProcessor(find_random_patch)
+
+    processed = p.process(fps, random_order=False, run_forever=True)
+
+    for i in processed:
+        print(i.shape)

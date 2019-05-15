@@ -18,7 +18,7 @@ def mesh2triang(mesh):
     return tri.Triangulation(xy[:, 0], xy[:, 1], mesh.cells())
 
 
-def run_simulation(dim):
+def run_simulation_fenics(dim):
     """Run simulation for a specified mesh size"""
     m = dim  # rows
     n = dim  # cols
@@ -51,7 +51,7 @@ def run_simulation(dim):
     return u, mesh
 
 
-def plot_simulation(dim, plot_type):
+def plot_simulation_fenics(dim, plot_type):
     """Run and plot simulation"""
     u, mesh = run_simulation(dim)
 
