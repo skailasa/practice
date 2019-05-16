@@ -188,3 +188,17 @@ local variables until all inner functions are no longer
 being refered to.
 
 Some engines might optimise this out, watch out for this.
+
+## Global object
+
+The global object provides vars and funcs available everyhwere
+, most of these are builtins/host env. In browser often
+called `window` in Node, `global`.
+
+This can lead to name conflicts, as all scripts see same
+global namespace - legacy feature. To get out of this have
+to use modules.
+
+Generally discouraged, like with any other languages, to use
+too many global objects.
+
