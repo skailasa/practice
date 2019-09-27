@@ -63,9 +63,10 @@ class Heap:
         return str(self.A)
 
 
-A = [6, 4, 7, 1, 5, 10, 0]
+if __name__ == "__main__":
+    A = [6, 4, 7, 1, 5, 10, 0]
 
-H = Heap(A)
-build_max_heap(H)
+    H = Heap(A)
+    build_max_heap(H)
 
-print(H)
+    print(H)
