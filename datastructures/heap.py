@@ -25,12 +25,12 @@ def max_heapify(H, i):
     """Maintains max heap property"""
     l = left(i)
     r = right(i)
-    if l <= H.heap_size and H[l] > H[i]:
+    if l <= H.heap_size-1 and H[l] > H[i]:
         largest = l
     else:
         largest = i
 
-    if r <= H.heap_size and H[r] > H[largest]:
+    if r <= H.heap_size-1 and H[r] > H[largest]:
         largest = r
 
     if largest != i:
