@@ -25,7 +25,6 @@ def max_heapify(H, i):
     """Maintains max heap property"""
     l = left(i)
     r = right(i)
-
     if l <= H.heap_size and H[l] > H[i]:
         largest = l
     else:
@@ -39,6 +38,12 @@ def max_heapify(H, i):
         H[i] = H[largest]
         H[largest] = tmp
         max_heapify(H, largest)
+
+
+def build_max_heap(H):
+
+    for i in range(H.length//2 - 1, -1, -1):
+        max_heapify(H, i)
 
 
 class Heap:
@@ -58,9 +63,9 @@ class Heap:
         return str(self.A)
 
 
-A = [6, 4, 7]
+A = [6, 4, 7, 1, 5, 10, 0]
 
 H = Heap(A)
-max_heapify(H, 0)
-print(H)
+build_max_heap(H)
 
+print(H)
