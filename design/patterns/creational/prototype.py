@@ -13,44 +13,38 @@ dispatcher for a prototype before cloning a new instance.
 """
 
 
-class Prototype:
-    """Declare an interface for a protoype"""
-    value = 'default'
-     
-    def __init__(self, name):
-        self.name = name
-
-    def clone(self, **attrs):
-        """Clone a prototype and update inner attributes dict"""
-        obj = _prototypes[self.name]()
-        obj.__dict__.update(attrs)
-        return obj
 
 class ConcreteA:
     """A concrete prototype"""
     value = 'A' 
-    
-    def clone(self, **attrs):
-        """Clone a prototype, returning a copy of ConcreteA()"""
-        obj = self.__class__()
-        obj.__dict__.update(attrs)
-        return obj
+
 
 class ConcreteB:
     """A concrete prototype"""
     value = 'B' 
-    
+
+
+PROTOTYPES = {'a': ConcreteA, 'b': ConcreteB}
+
+
+class Prototype:
+    """Declare an interface for a protoype"""
+    value = 'default'
+
+    def __init__(self, value):
+        self.value = value
+        self.clone(value=value)
+        
     def clone(self, **attrs):
-        """Clone a prototype, returning a copy of ConcreteA()"""
-        obj = self.__class__()
+        """Clone a prototype and update inner attributes dict"""
+        obj = PROTOTYPES[attrs['value']]()
         obj.__dict__.update(attrs)
         return obj
 
-PROTOYPES = {'a': ConcreteA, 'b': ConcreteB}
 
 def main():
     prototype = Prototype('a')
-    prototype.value 
+    print(prototype.value) 
 
 
 if __name__ == "__main__":
